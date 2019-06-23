@@ -1,0 +1,13 @@
+{
+    "parent" : "engine:iconItem",
+    "Display Name" : {
+        "name" : "Bee B"
+    },
+    "Item" : {
+        "icon" : "Apiculture:bee_b"
+    },
+    "Genetics" : {
+        "activeGenes" : [2, 2, 2, 2, 2],
+        "inactiveGenes" : [2, 2, 2, 2, 2]
+    }
+}
