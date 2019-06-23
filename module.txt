@@ -1,0 +1,11 @@
+{
+    "id" : "Apiculture",
+    "version" : "0.1.0-SNAPSHOT",
+    "author" : "Soundwave",
+    "displayName" : "Apiculture",
+    "description" : "",
+    "dependencies" : [
+        {"id" : "SoundyGenetics", "minVersion" : "0.1.0"}
+    ],
+    "serverSideOnly" : false
+}
