@@ -6,6 +6,8 @@
     "Item" : {
         "icon" : "Apiculture:bee_a"
     },
+    "Bee" : {
+    },
     "Genetics" : {
         "activeGenes" : [1, 1, 1, 1, 1],
         "inactiveGenes" : [1, 1, 1, 1, 1]
