@@ -9,6 +9,7 @@
     "Bee" : {
     },
     "Genetics" : {
+        "size" : 5,
         "activeGenes" : [1, 1, 1, 1, 1],
         "inactiveGenes" : [1, 1, 1, 1, 1]
     }

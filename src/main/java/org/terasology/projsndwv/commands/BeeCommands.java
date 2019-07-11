@@ -33,6 +33,7 @@ import org.terasology.projsndwv.components.MatedComponent;
 import org.terasology.projsndwv.genetics.Genome;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
+import org.terasology.world.generator.WorldGenerator;
 
 import java.util.Iterator;
 
@@ -41,7 +42,12 @@ public class BeeCommands extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    @In
+    private WorldGenerator worldGenerator;
+
     private EntityRef mateTarget = null;
+
+    private Genome genome;
 
     @Command(value = "beeDumpGenes",
             shortDescription = "Shows the genes of a held bee",
@@ -127,9 +133,7 @@ public class BeeCommands extends BaseComponentSystem {
             return "Held item is not a mated bee.";
         }
 
-        Genome genome = new Genome();
-
-        Iterator<GeneticsComponent> offspringGenetics = genome.recombine(item.getComponent(GeneticsComponent.class), item.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(item.getComponent(GeneticsComponent.class), item.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
 
         for (int i = 0; i < count; i++) {
             EntityRef drop = entityManager.create("Apiculture:bee");
@@ -140,5 +144,12 @@ public class BeeCommands extends BaseComponentSystem {
         }
 
         return "";
+    }
+
+    private Genome getGenome() {
+        if (genome == null) {
+            genome = new Genome(5, worldGenerator.getWorldSeed().hashCode());
+        }
+        return genome;
     }
 }

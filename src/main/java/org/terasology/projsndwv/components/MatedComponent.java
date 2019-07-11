@@ -21,7 +21,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 
 public class MatedComponent implements Component {
-    public EntityRef container; // TODO: (Soundwave) Limit the lifetime of the container to that of the parent.
+    public EntityRef container;
 
     public MatedComponent() {}
 
