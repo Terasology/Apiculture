@@ -1,0 +1,11 @@
+{
+  "parent" : "engine:iconItem",
+  "Display Name" : {
+    "name" : "Bee"
+  },
+  "Item" : {
+    "icon" : "Apiculture:bee_a"
+  },
+  "Bee" : {
+  }
+}

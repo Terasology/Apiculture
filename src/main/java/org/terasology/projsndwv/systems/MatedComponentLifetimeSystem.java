@@ -23,7 +23,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.projsndwv.components.MatedComponent;
 
-@RegisterSystem(RegisterMode.ALWAYS)
+@RegisterSystem(RegisterMode.AUTHORITY)
 public class MatedComponentLifetimeSystem extends BaseComponentSystem {
     @ReceiveEvent(components = {MatedComponent.class})
     public void onRemoved(BeforeRemoveComponent event, EntityRef ref) {

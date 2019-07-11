@@ -22,13 +22,19 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterHeldItemComponent;
 import org.terasology.logic.characters.events.ChangeHeldItemRequest;
 import org.terasology.logic.console.commandSystem.annotations.Command;
+import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
+import org.terasology.logic.inventory.events.DropItemEvent;
+import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.network.ClientComponent;
 import org.terasology.projsndwv.components.BeeComponent;
 import org.terasology.projsndwv.components.MatedComponent;
+import org.terasology.projsndwv.genetics.Genome;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
+
+import java.util.Iterator;
 
 @RegisterSystem
 public class BeeCommands extends BaseComponentSystem {
@@ -108,13 +114,29 @@ public class BeeCommands extends BaseComponentSystem {
 
     @Command(value = "beeBirth",
             shortDescription = "Causes a held bee to give birth",
-            helpText = "Causes a held mated bee to give birth to a new generation, according to the mechanics of genetics.",
+            helpText = "Causes a held mated bee to give birth to a new generation, according to the mechanics of genetics. If provided, the generation will have <count> offspring. Otherwise, it'll have 2.",
             runOnServer = true,
             requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String birth(@Sender EntityRef client) {
+    public String birth(@Sender EntityRef client, @CommandParam(value = "count", required = false)Integer count) {
+        if (count == null) {
+            count = 2;
+        }
+
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
         if (item.getComponent(BeeComponent.class) == null || item.getComponent(MatedComponent.class) == null) {
             return "Held item is not a mated bee.";
+        }
+
+        Genome genome = new Genome();
+
+        Iterator<GeneticsComponent> offspringGenetics = genome.recombine(item.getComponent(GeneticsComponent.class), item.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+
+        for (int i = 0; i < count; i++) {
+            EntityRef drop = entityManager.create("Apiculture:bee");
+
+            drop.addComponent(offspringGenetics.next());
+
+            drop.send(new DropItemEvent(client.getComponent(ClientComponent.class).character.getComponent(LocationComponent.class).getWorldPosition()));
         }
 
         return "";
