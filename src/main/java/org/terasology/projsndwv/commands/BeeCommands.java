@@ -76,6 +76,23 @@ public class BeeCommands extends BaseComponentSystem {
                 sb.append(", ");
             }
         }
+        if (item.hasComponent(MatedComponent.class)) {
+            sb.append("\n\nMate:\nActive: ");
+            genetics = item.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class);
+            for (int i = 0; i < genetics.activeGenes.size(); i++) {
+                sb.append(genetics.activeGenes.get(i));
+                if (i != genetics.activeGenes.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("\nInactive: ");
+            for (int i = 0; i < genetics.inactiveGenes.size(); i++) {
+                sb.append(genetics.inactiveGenes.get(i));
+                if (i != genetics.inactiveGenes.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+        }
         return sb.toString();
     }
 
@@ -149,6 +166,22 @@ public class BeeCommands extends BaseComponentSystem {
     private Genome getGenome() {
         if (genome == null) {
             genome = new Genome(5, worldGenerator.getWorldSeed().hashCode());
+
+            GeneticsComponent beeCComponent = new GeneticsComponent(5);
+
+            beeCComponent.activeGenes.add(3); // TODO: (Soundwave) This is bad, both because the size isn't ensured, and because it's messy.
+            beeCComponent.activeGenes.add(3);
+            beeCComponent.activeGenes.add(3);
+            beeCComponent.activeGenes.add(3);
+            beeCComponent.activeGenes.add(3);
+
+            beeCComponent.inactiveGenes.add(3);
+            beeCComponent.inactiveGenes.add(3);
+            beeCComponent.inactiveGenes.add(3);
+            beeCComponent.inactiveGenes.add(3);
+            beeCComponent.inactiveGenes.add(3);
+
+            genome.registerMutation(0, 1, 2, beeCComponent, 0.5f);
         }
         return genome;
     }
