@@ -1,0 +1,14 @@
+{
+  "parent" : "Apiculture:bee_drone",
+  "DisplayName" : {
+    "name" : "B Drone"
+  },
+  "Item" : {
+    "icon" : "Apiculture:bee_b_drone"
+  },
+  "Genetics" : {
+    "size" : 5,
+    "activeGenes" : [2, 2, 2, 2, 2],
+    "inactiveGenes" : [2, 2, 2, 2, 2]
+  }
+}

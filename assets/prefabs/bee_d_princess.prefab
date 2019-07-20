@@ -1,0 +1,14 @@
+{
+  "parent" : "Apiculture:bee_princess",
+  "DisplayName" : {
+    "name" : "D Princess"
+  },
+  "Item" : {
+    "icon" : "Apiculture:bee_d_princess"
+  },
+  "Genetics" : {
+    "size" : 5,
+    "activeGenes" : [4, 4, 4, 4, 4],
+    "inactiveGenes" : [4, 4, 4, 4, 4]
+  }
+}
