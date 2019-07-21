@@ -58,7 +58,7 @@ public class BeeCommands extends BaseComponentSystem {
             requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String dumpGenes(@Sender EntityRef client) {
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        if (item.getComponent(BeeComponent.class) == null) {
+        if (!item.hasComponent(BeeComponent.class)) {
             return "Held item is not a bee.";
         }
 
@@ -105,10 +105,11 @@ public class BeeCommands extends BaseComponentSystem {
             requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String mateTarget(@Sender EntityRef client) {
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        if (item.getComponent(BeeComponent.class) == null) {
+        BeeComponent beeComponent = item.getComponent(BeeComponent.class);
+        if (beeComponent == null) {
             return "Held item is not a bee.";
         }
-        if (item.getComponent(BeeComponent.class).type != 1) {
+        if (beeComponent.type != 1) {
             return "Held item is not a princess";
         }
 
@@ -123,13 +124,20 @@ public class BeeCommands extends BaseComponentSystem {
             requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String mate(@Sender EntityRef client) {
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        if (item.getComponent(BeeComponent.class) == null) {
+        BeeComponent itemBeeComponent = item.getComponent(BeeComponent.class);
+        if (itemBeeComponent == null) {
             return "Held item is not a bee."; // TODO: (Soundwave) Use constants / Make translatable?
         }
-        if (item.getComponent(BeeComponent.class).type != 0) {
+        if (itemBeeComponent.type != 0) {
             return "Held item is not a drone.";
         }
-        if (mateTarget == null || mateTarget.getComponent(BeeComponent.class) == null || mateTarget.getComponent(BeeComponent.class).type != 1) {
+
+        if (mateTarget == null) {
+            return "No mate target. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
+        }
+
+        BeeComponent mateBeeComponent = mateTarget.getComponent(BeeComponent.class);
+        if (mateBeeComponent == null || mateBeeComponent.type != 1) {
             return "Target invalid. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
         }
 
@@ -158,7 +166,8 @@ public class BeeCommands extends BaseComponentSystem {
         }
 
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        if (item.getComponent(BeeComponent.class) == null || item.getComponent(MatedComponent.class) == null || item.getComponent(BeeComponent.class).type != 2) {
+        BeeComponent beeComponent = item.getComponent(BeeComponent.class);
+        if (beeComponent == null || !item.hasComponent(MatedComponent.class) || beeComponent.type != 2) {
             return "Held item is not a queen.";
         }
 
