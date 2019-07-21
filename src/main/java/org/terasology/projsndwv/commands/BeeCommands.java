@@ -131,11 +131,9 @@ public class BeeCommands extends BaseComponentSystem {
         if (itemBeeComponent.type != 0) {
             return "Held item is not a drone.";
         }
-
         if (mateTarget == null) {
             return "No mate target. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
         }
-
         BeeComponent mateBeeComponent = mateTarget.getComponent(BeeComponent.class);
         if (mateBeeComponent == null || mateBeeComponent.type != 1) {
             return "Target invalid. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
