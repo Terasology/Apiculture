@@ -1,6 +1,6 @@
 {
   "parent" : "engine:iconItem",
   "Bee" : {
-    "type" : 0
+    "type" : "DRONE"
   }
 }

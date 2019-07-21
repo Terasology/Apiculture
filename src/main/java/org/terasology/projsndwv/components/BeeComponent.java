@@ -18,13 +18,14 @@ package org.terasology.projsndwv.components;
 import org.terasology.entitySystem.Component;
 
 public final class BeeComponent implements Component {
-    // TODO: Make enum
     /**
-     * Bee type, that is, whether a bee is a drone, princess, or queen.<br/>
-     * <br/>
-     * 0 - Drone<br/>
-     * 1 - Princess<br/>
-     * 2 - Queen
+     * Bee type, that is, whether a bee is a drone, princess, or queen.
      */
-    public int type;
+    public BeeType type;
+
+    public enum BeeType {
+        DRONE,
+        PRINCESS,
+        QUEEN
+    }
 }

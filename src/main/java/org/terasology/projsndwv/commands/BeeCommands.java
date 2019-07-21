@@ -109,7 +109,7 @@ public class BeeCommands extends BaseComponentSystem {
         if (beeComponent == null) {
             return "Held item is not a bee.";
         }
-        if (beeComponent.type != 1) {
+        if (beeComponent.type != BeeComponent.BeeType.PRINCESS) {
             return "Held item is not a princess";
         }
 
@@ -128,20 +128,20 @@ public class BeeCommands extends BaseComponentSystem {
         if (itemBeeComponent == null) {
             return "Held item is not a bee."; // TODO: (Soundwave) Use constants / Make translatable?
         }
-        if (itemBeeComponent.type != 0) {
+        if (itemBeeComponent.type != BeeComponent.BeeType.DRONE) {
             return "Held item is not a drone.";
         }
         if (mateTarget == null) {
             return "No mate target. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
         }
         BeeComponent mateBeeComponent = mateTarget.getComponent(BeeComponent.class);
-        if (mateBeeComponent == null || mateBeeComponent.type != 1) {
+        if (mateBeeComponent == null || mateBeeComponent.type != BeeComponent.BeeType.PRINCESS) {
             return "Target invalid. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
         }
 
         mateTarget.addComponent(new MatedComponent(item.getComponent(GeneticsComponent.class), entityManager));
         BeeComponent beeComponent = mateTarget.getComponent(BeeComponent.class);
-        beeComponent.type = 2;
+        beeComponent.type = BeeComponent.BeeType.QUEEN;
         mateTarget.saveComponent(beeComponent);
         ItemComponent itemComponent = mateTarget.getComponent(ItemComponent.class);
         itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(mateTarget.getComponent(GeneticsComponent.class).activeGenes.get(0), 2);
@@ -165,7 +165,7 @@ public class BeeCommands extends BaseComponentSystem {
 
         EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
         BeeComponent beeComponent = item.getComponent(BeeComponent.class);
-        if (beeComponent == null || !item.hasComponent(MatedComponent.class) || beeComponent.type != 2) {
+        if (beeComponent == null || !item.hasComponent(MatedComponent.class) || beeComponent.type != BeeComponent.BeeType.QUEEN) {
             return "Held item is not a queen.";
         }
 
