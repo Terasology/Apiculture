@@ -5,27 +5,27 @@
     "type": "RelativeLayout",
     "contents": [
       {
-        "type" : "UIBox",
-        "layoutInfo" : {
-          "position-top" : {
-            "target" : "TOP",
-            "widget" : "content",
-            "offset" : -10
+        "type": "UIBox",
+        "layoutInfo": {
+          "position-top": {
+            "target": "TOP",
+            "widget": "content",
+            "offset": -10
           },
           "position-bottom" : {
-            "target" : "BOTTOM",
-            "widget" : "content",
-            "offset" : -10
+            "target": "BOTTOM",
+            "widget": "content",
+            "offset": -10
           },
-          "position-left" : {
-            "target" : "LEFT",
-            "widget" : "content",
-            "offset" : -10
+          "position-left": {
+            "target": "LEFT",
+            "widget": "content",
+            "offset": -10
           },
-          "position-right" : {
-            "target" : "RIGHT",
-            "widget" : "content",
-            "offset" : -10
+          "position-right": {
+            "target": "RIGHT",
+            "widget": "content",
+            "offset": -10
           }
         }
       },
@@ -45,51 +45,21 @@
             "columns": 2,
             "contents": [
               {
-                "type": "ColumnLayout",
-                "columns": 2,
-                "contents": [
+                "type" : "ColumnLayout",
+                "contents" : [
                   {
-                    "type": "ColumnLayout",
-                    "contents": [
+                    "type" : "RelativeLayout",
+                    "contents" : [
                       {
-                        "type": "RelativeLayout",
-                        "contents": [
-                          {
-                            "type": "InventoryGrid",
-                            "layoutInfo": {
-                              "use-content-width": true,
-                              "use-content-height": true,
-                              "position-vertical-center": {},
-                              "position-right": {
-                                "offset": 5
-                              }
-                            },
-                            "id": "female"
-                          }
-                        ]
+                        "type" : "InventoryGrid",
+                        "layoutInfo" : {
+                          "use-content-width" : true,
+                          "use-content-height" : true,
+                          "position-vertical-center" : {},
+                          "position-horizontal-center" : {}
+                        },
+                        "id" : "female"
                       },
-                      {
-                        "type": "RelativeLayout",
-                        "contents": [
-                          {
-                            "type": "InventoryGrid",
-                            "layoutInfo": {
-                              "use-content-width": true,
-                              "use-content-height": true,
-                              "position-vertical-center": {},
-                              "position-right": {
-                                "offset": 5
-                              }
-                            },
-                            "id": "male"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "RelativeLayout",
-                    "contents": [
                       {
                         "type": "LifespanBar",
                         "layoutInfo": {
@@ -97,9 +67,26 @@
                           "use-content-height": true,
                           "position-vertical-center": {},
                           "position-left": {
-                            "offset": 5
+                            "widget": "female",
+                            "target": "RIGHT",
+                            "offset": 10
                           }
                         }
+                      }
+                    ]
+                  },
+                  {
+                    "type" : "RelativeLayout",
+                    "contents" : [
+                      {
+                        "type" : "InventoryGrid",
+                        "layoutInfo" : {
+                          "use-content-width" : true,
+                          "use-content-height" : true,
+                          "position-vertical-center" : {},
+                          "position-horizontal-center" : {}
+                        },
+                        "id" : "male"
                       }
                     ]
                   }
