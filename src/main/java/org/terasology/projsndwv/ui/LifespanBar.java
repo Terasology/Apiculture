@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.projsndwv.ui;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.math.geom.Vector2i;
+import org.terasology.rendering.nui.Canvas;
+import org.terasology.rendering.nui.Color;
+import org.terasology.rendering.nui.CoreWidget;
 
-public final class MatedComponent implements Component {
-    public EntityRef container;
+public class LifespanBar extends CoreWidget {
+    @Override
+    public void onDraw(Canvas canvas) {
+        canvas.drawFilledRectangle(canvas.getRegion(), Color.YELLOW);
+    }
 
-    public MatedComponent() {}
-
-    public MatedComponent(GeneticsComponent geneticsComponent, EntityManager entityManager) {
-        container = entityManager.create(geneticsComponent);
+    @Override
+    public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {
+        return new Vector2i(8, 48);
     }
 }

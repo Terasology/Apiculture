@@ -5,7 +5,8 @@
     "displayName" : "Apiculture",
     "description" : "",
     "dependencies" : [
-        {"id" : "SoundyGenetics", "minVersion" : "0.1.0"}
+        {"id" : "SoundyGenetics", "minVersion" : "0.1.0"},
+        {"id" : "Inventory", "minVersion" : "1.0.0"}
     ],
     "serverSideOnly" : false
 }

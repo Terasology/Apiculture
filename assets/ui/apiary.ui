@@ -1,0 +1,154 @@
+{
+  "type": "Apiculture:ApiaryScreen",
+  "skin": "apiary",
+  "contents": {
+    "type": "RelativeLayout",
+    "contents": [
+      {
+        "type" : "UIBox",
+        "layoutInfo" : {
+          "position-top" : {
+            "target" : "TOP",
+            "widget" : "content",
+            "offset" : -10
+          },
+          "position-bottom" : {
+            "target" : "BOTTOM",
+            "widget" : "content",
+            "offset" : -10
+          },
+          "position-left" : {
+            "target" : "LEFT",
+            "widget" : "content",
+            "offset" : -10
+          },
+          "position-right" : {
+            "target" : "RIGHT",
+            "widget" : "content",
+            "offset" : -10
+          }
+        }
+      },
+      {
+        "type": "ColumnLayout",
+        "id": "content",
+        "verticalSpacing": 10,
+        "layoutInfo": {
+          "use-content-width": true,
+          "use-content-height": true,
+          "position-vertical-center": {},
+          "position-horizontal-center": {}
+        },
+        "contents": [
+          {
+            "type": "ColumnLayout",
+            "columns": 2,
+            "contents": [
+              {
+                "type": "ColumnLayout",
+                "columns": 2,
+                "contents": [
+                  {
+                    "type": "ColumnLayout",
+                    "contents": [
+                      {
+                        "type": "RelativeLayout",
+                        "contents": [
+                          {
+                            "type": "InventoryGrid",
+                            "layoutInfo": {
+                              "use-content-width": true,
+                              "use-content-height": true,
+                              "position-vertical-center": {},
+                              "position-right": {
+                                "offset": 5
+                              }
+                            },
+                            "id": "female"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "RelativeLayout",
+                        "contents": [
+                          {
+                            "type": "InventoryGrid",
+                            "layoutInfo": {
+                              "use-content-width": true,
+                              "use-content-height": true,
+                              "position-vertical-center": {},
+                              "position-right": {
+                                "offset": 5
+                              }
+                            },
+                            "id": "male"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "LifespanBar",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "use-content-height": true,
+                          "position-vertical-center": {},
+                          "position-left": {
+                            "offset": 5
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "MultiRowLayout",
+                "rows": 3,
+                "contents": [
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "InventoryGrid",
+                        "id": "out0",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "position-horizontal-center": {}
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "InventoryGrid",
+                    "id": "out1"
+                  },
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "InventoryGrid",
+                        "id": "out2",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "position-horizontal-center": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "InventoryGrid",
+            "id": "inventory"
+          }
+        ]
+      }
+    ]
+  }
+}

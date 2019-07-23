@@ -1,0 +1,12 @@
+{
+  "displayName": "Apiary",
+  "family": "horizontal",
+  "tiles": {
+    "all": "apiary_side",
+    "top": "apiary_top",
+    "bottom": "apiary_bottom"
+  },
+  "entity": {
+    "prefab": "apiary"
+  }
+}

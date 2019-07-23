@@ -16,16 +16,6 @@
 package org.terasology.projsndwv.components;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 
-public final class MatedComponent implements Component {
-    public EntityRef container;
-
-    public MatedComponent() {}
-
-    public MatedComponent(GeneticsComponent geneticsComponent, EntityManager entityManager) {
-        container = entityManager.create(geneticsComponent);
-    }
+public class ApiaryComponent implements Component {
 }
