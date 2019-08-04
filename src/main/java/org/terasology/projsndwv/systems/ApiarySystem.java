@@ -22,7 +22,9 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
 import org.terasology.projsndwv.components.ApiaryComponent;
+import org.terasology.projsndwv.components.BeeComponent;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ApiarySystem extends BaseComponentSystem {
@@ -32,6 +34,26 @@ public class ApiarySystem extends BaseComponentSystem {
             InventoryComponent inventoryComponent = new InventoryComponent(9);
             inventoryComponent.privateToOwner = false;
             entity.addComponent(inventoryComponent);
+        }
+    }
+
+    @ReceiveEvent
+    public void onItemPutIntoApiary(BeforeItemPutInInventory event, EntityRef entity, ApiaryComponent component) {
+        if (!event.getItem().hasComponent(BeeComponent.class)) {
+            event.consume();
+        }
+        if (event.getSlot() == 0) {
+            if (event.getItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.DRONE) {
+                event.consume();
+            }
+        }
+        else if (event.getSlot() == 1) {
+            if (event.getItem().getComponent(BeeComponent.class).type != BeeComponent.BeeType.DRONE) {
+                event.consume();
+            }
+        }
+        else {
+            event.consume();
         }
     }
 }

@@ -7,8 +7,8 @@
     "icon" : "Apiculture:bee_c_princess"
   },
   "Genetics" : {
-    "size" : 5,
-    "activeGenes" : [3, 3, 3, 3, 3],
-    "inactiveGenes" : [3, 3, 3, 3, 3]
+    "size" : 4,
+    "activeGenes" : [2, 2, 2, 4],
+    "inactiveGenes" : [2, 2, 2, 4]
   }
 }

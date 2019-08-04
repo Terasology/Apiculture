@@ -194,23 +194,21 @@ public class BeeCommands extends BaseComponentSystem {
 
     private Genome getGenome() {
         if (genome == null) {
-            genome = new Genome(5, worldGenerator.getWorldSeed().hashCode());
+            genome = new Genome(4, worldGenerator.getWorldSeed().hashCode());
 
-            GeneticsComponent beeCComponent = new GeneticsComponent(5);
+            GeneticsComponent beeCComponent = new GeneticsComponent(4);
 
-            beeCComponent.activeGenes.add(3); // TODO: (Soundwave) This is bad, both because the size isn't ensured, and because it's messy.
-            beeCComponent.activeGenes.add(3);
-            beeCComponent.activeGenes.add(3);
-            beeCComponent.activeGenes.add(3);
-            beeCComponent.activeGenes.add(3);
+            beeCComponent.activeGenes.add(2); // TODO: (Soundwave) This is bad, both because the size isn't ensured, and because it's messy.
+            beeCComponent.activeGenes.add(2);
+            beeCComponent.activeGenes.add(2);
+            beeCComponent.activeGenes.add(4);
 
-            beeCComponent.inactiveGenes.add(3);
-            beeCComponent.inactiveGenes.add(3);
-            beeCComponent.inactiveGenes.add(3);
-            beeCComponent.inactiveGenes.add(3);
-            beeCComponent.inactiveGenes.add(3);
+            beeCComponent.inactiveGenes.add(2);
+            beeCComponent.inactiveGenes.add(2);
+            beeCComponent.inactiveGenes.add(2);
+            beeCComponent.inactiveGenes.add(4);
 
-            genome.registerMutation(0, 1, 2, beeCComponent, 0.5f);
+            genome.registerMutation(0, 0, 1, beeCComponent, 0.05f);
         }
         return genome;
     }
