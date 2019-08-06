@@ -62,6 +62,7 @@
                       },
                       {
                         "type": "LifespanBar",
+                        "id": "lifespanBar",
                         "layoutInfo": {
                           "use-content-width": true,
                           "use-content-height": true,

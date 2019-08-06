@@ -29,12 +29,12 @@ public class TempBeeRegistry {
     public static AssetManager assetManager;
 
     public static TextureRegionAsset<?> getTextureRegionAssetForSpeciesAndType(int species, int type) {
-        return (TextureRegionAsset<?>)CoreRegistry.get(AssetManager.class).getAsset("Apiculture:bee_" + new String[] {"a", "b", "c", "d"}[species - 1] + "_" + new String[] {"drone", "princess", "queen"}[type], TextureRegionAsset.class).get();
+        return (TextureRegionAsset<?>)CoreRegistry.get(AssetManager.class).getAsset("Apiculture:bee_" + new String[] {"a", "b", "c"}[species] + "_" + new String[] {"drone", "princess", "queen"}[type], TextureRegionAsset.class).get();
     }
 
     public static DisplayNameComponent getDisplayNameComponentForSpeciesAndType(int species, int type) {
         DisplayNameComponent displayNameComponent = new DisplayNameComponent();
-        displayNameComponent.name = new String[] {"A", "B", "C", "D"}[species - 1] + " " + new String[] {"Drone", "Princess", "Queen"}[type];
+        displayNameComponent.name = new String[] {"A", "B", "C"}[species] + " " + new String[] {"Drone", "Princess", "Queen"}[type];
         return displayNameComponent;
     }
 }

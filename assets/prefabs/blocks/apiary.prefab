@@ -3,5 +3,9 @@
   "InteractionScreen": {
     "screen": "Apiculture:apiary"
   },
-  "Apiary": {}
+  "Apiary": {},
+  "Inventory": {
+    "privateToOwner": false,
+    "itemSlots": [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
 }

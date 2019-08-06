@@ -15,34 +15,28 @@
  */
 package org.terasology.projsndwv.systems;
 
+import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.entity.lifecycleEvents.OnAddedComponent;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
+import org.terasology.logic.inventory.events.InventorySlotChangedEvent;
 import org.terasology.projsndwv.components.ApiaryComponent;
+import org.terasology.projsndwv.components.ApiaryMatingComponent;
 import org.terasology.projsndwv.components.BeeComponent;
+import org.terasology.registry.CoreRegistry;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ApiarySystem extends BaseComponentSystem {
     @ReceiveEvent
-    public void onApiaryInitialized(OnAddedComponent event, EntityRef entity, ApiaryComponent component) {
-        if (!entity.hasComponent(InventoryComponent.class)) {
-            InventoryComponent inventoryComponent = new InventoryComponent(9);
-            inventoryComponent.privateToOwner = false;
-            entity.addComponent(inventoryComponent);
-        }
-    }
-
-    @ReceiveEvent
-    public void onItemPutIntoApiary(BeforeItemPutInInventory event, EntityRef entity, ApiaryComponent component) {
+    public void beforeItemPutIntoApiary(BeforeItemPutInInventory event, EntityRef entity, ApiaryComponent component) {
         if (!event.getItem().hasComponent(BeeComponent.class)) {
             event.consume();
         }
-        if (event.getSlot() == 0) {
+        else if (event.getSlot() == 0) {
             if (event.getItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.DRONE) {
                 event.consume();
             }
@@ -54,6 +48,34 @@ public class ApiarySystem extends BaseComponentSystem {
         }
         else {
             event.consume();
+        }
+    }
+
+    @ReceiveEvent
+    public void onApiaryInventoryChanged(InventorySlotChangedEvent event, EntityRef entity, ApiaryComponent component) {
+        if (event.getSlot() == 0) {
+            if (!event.getNewItem().hasComponent(BeeComponent.class)) {
+                entity.removeComponent(ApiaryMatingComponent.class);
+            }
+            else {
+                BeeComponent maleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(1).getComponent(BeeComponent.class);
+                if (maleBee != null) {
+                    entity.addOrSaveComponent(new ApiaryMatingComponent());
+                }
+            }
+        }
+        else if (event.getSlot() == 1){
+            if (!event.getNewItem().hasComponent(BeeComponent.class)) {
+                entity.removeComponent(ApiaryMatingComponent.class);
+            }
+            else {
+                BeeComponent femaleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(0).getComponent(BeeComponent.class);
+                if (femaleBee != null) {
+                    if (femaleBee.type == BeeComponent.BeeType.PRINCESS) {
+                        entity.addOrSaveComponent(new ApiaryMatingComponent());
+                    }
+                }
+            }
         }
     }
 }

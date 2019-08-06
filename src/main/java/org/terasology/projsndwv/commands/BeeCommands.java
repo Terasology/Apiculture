@@ -20,7 +20,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterHeldItemComponent;
-import org.terasology.logic.characters.events.ChangeHeldItemRequest;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
@@ -96,61 +95,6 @@ public class BeeCommands extends BaseComponentSystem {
             }
         }
         return sb.toString();
-    }
-
-    @Command(value = "beeMateTarget",
-            shortDescription = "Sets a held princess as the target for the 'beeMate'",
-            helpText = "Sets the held princess as the target for the 'beeMate' command.",
-            runOnServer = true,
-            requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String mateTarget(@Sender EntityRef client) {
-        EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        BeeComponent beeComponent = item.getComponent(BeeComponent.class);
-        if (beeComponent == null) {
-            return "Held item is not a bee.";
-        }
-        if (beeComponent.type != BeeComponent.BeeType.PRINCESS) {
-            return "Held item is not a princess";
-        }
-
-        mateTarget = item;
-        return "";
-    }
-
-    @Command(value = "beeMate",
-            shortDescription = "Mates a held drone with the target.",
-            helpText = "Mates a held drone with the target previously set by 'beeMateTarget.'",
-            runOnServer = true,
-            requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String mate(@Sender EntityRef client) {
-        EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        BeeComponent itemBeeComponent = item.getComponent(BeeComponent.class);
-        if (itemBeeComponent == null) {
-            return "Held item is not a bee."; // TODO: (Soundwave) Use constants / Make translatable?
-        }
-        if (itemBeeComponent.type != BeeComponent.BeeType.DRONE) {
-            return "Held item is not a drone.";
-        }
-        if (mateTarget == null) {
-            return "No mate target. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
-        }
-        BeeComponent mateBeeComponent = mateTarget.getComponent(BeeComponent.class);
-        if (mateBeeComponent == null || mateBeeComponent.type != BeeComponent.BeeType.PRINCESS) {
-            return "Target invalid. Please use 'beeMateTarget' to set a valid target."; // TODO: (Soundwave) Use constants for command names
-        }
-
-        mateTarget.addComponent(new MatedComponent(item.getComponent(GeneticsComponent.class), entityManager));
-        BeeComponent beeComponent = mateTarget.getComponent(BeeComponent.class);
-        beeComponent.type = BeeComponent.BeeType.QUEEN;
-        mateTarget.saveComponent(beeComponent);
-        ItemComponent itemComponent = mateTarget.getComponent(ItemComponent.class);
-        itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(mateTarget.getComponent(GeneticsComponent.class).activeGenes.get(0), 2);
-        mateTarget.saveComponent(itemComponent);
-        mateTarget.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(mateTarget.getComponent(GeneticsComponent.class).activeGenes.get(0), 2));
-        item.destroy();
-        client.getComponent(ClientComponent.class).character.send(new ChangeHeldItemRequest(item));
-
-        return "";
     }
 
     @Command(value = "beeBirth",

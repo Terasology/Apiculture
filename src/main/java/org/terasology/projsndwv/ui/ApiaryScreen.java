@@ -15,15 +15,30 @@
  */
 package org.terasology.projsndwv.ui;
 
+import org.terasology.engine.Time;
+import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.logic.characters.CharacterHeldItemComponent;
+import org.terasology.logic.characters.events.ChangeHeldItemRequest;
+import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.network.ClientComponent;
+import org.terasology.projsndwv.TempBeeRegistry;
+import org.terasology.projsndwv.components.ApiaryMatingComponent;
+import org.terasology.projsndwv.components.BeeComponent;
+import org.terasology.projsndwv.components.MatedComponent;
+import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.registry.CoreRegistry;
+import org.terasology.registry.In;
 import org.terasology.rendering.nui.BaseInteractionScreen;
+import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class ApiaryScreen extends BaseInteractionScreen {
     private InventoryGrid inventory;
     private InventoryGrid female;
@@ -31,6 +46,10 @@ public class ApiaryScreen extends BaseInteractionScreen {
     private InventoryGrid out0;
     private InventoryGrid out1;
     private InventoryGrid out2;
+    private LifespanBar lifespanBar;
+
+    @In
+    private Time time;
 
     @Override
     protected void initializeWithInteractionTarget(EntityRef interactionTarget) {
@@ -74,6 +93,7 @@ public class ApiaryScreen extends BaseInteractionScreen {
         out0 = find("out0", InventoryGrid.class);
         out1 = find("out1", InventoryGrid.class);
         out2 = find("out2", InventoryGrid.class);
+        lifespanBar = find("lifespanBar", LifespanBar.class);
     }
 
     private static class EntityRefBinding extends ReadOnlyBinding<EntityRef> {
@@ -87,5 +107,42 @@ public class ApiaryScreen extends BaseInteractionScreen {
         public EntityRef get() {
             return entityRef;
         }
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        EntityRef interactionTarget = getInteractionTarget();
+        ApiaryMatingComponent matingComponent = interactionTarget.getComponent(ApiaryMatingComponent.class);
+        if (matingComponent != null) {
+            if (matingComponent.mateFinishTime <= time.getGameTimeInMs()) {
+                interactionTarget.removeComponent(ApiaryMatingComponent.class);
+
+                EntityRef femaleBee = getInteractionTarget().getComponent(InventoryComponent.class).itemSlots.get(0); // TODO: slot constants
+                EntityRef maleBee = getInteractionTarget().getComponent(InventoryComponent.class).itemSlots.get(1);
+                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), CoreRegistry.get(EntityManager.class)));
+                BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
+                beeComponent.type = BeeComponent.BeeType.QUEEN;
+                femaleBee.saveComponent(beeComponent);
+                ItemComponent itemComponent = femaleBee.getComponent(ItemComponent.class);
+                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(0), 2);
+                femaleBee.saveComponent(itemComponent);
+                femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(0), 2));
+                maleBee.destroy();
+            }
+            else {
+                lifespanBar.setColor(Color.RED);
+                lifespanBar.setFill((1000 + time.getGameTimeInMs() - matingComponent.mateFinishTime) / 1000f); // TODO: Make mating time constant
+            }
+        }
+        else {
+            lifespanBar.setFill(0f);
+        }
+    }
+
+    @Override
+    public boolean isModal() {
+        return false;
     }
 }
