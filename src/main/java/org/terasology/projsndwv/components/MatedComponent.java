@@ -22,10 +22,14 @@ import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 
 public final class MatedComponent implements Component {
     public EntityRef container;
+    public int ticksRemaining;
+    public int lifespan;
 
     public MatedComponent() {}
 
-    public MatedComponent(GeneticsComponent geneticsComponent, EntityManager entityManager) {
+    public MatedComponent(GeneticsComponent geneticsComponent, int lifespan, EntityManager entityManager) {
         container = entityManager.create(geneticsComponent);
+        this.lifespan = lifespan;
+        ticksRemaining = lifespan;
     }
 }

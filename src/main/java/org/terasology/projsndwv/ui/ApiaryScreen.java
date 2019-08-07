@@ -18,17 +18,16 @@ package org.terasology.projsndwv.ui;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.characters.CharacterHeldItemComponent;
-import org.terasology.logic.characters.events.ChangeHeldItemRequest;
+import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.network.ClientComponent;
 import org.terasology.projsndwv.TempBeeRegistry;
 import org.terasology.projsndwv.components.ApiaryMatingComponent;
 import org.terasology.projsndwv.components.BeeComponent;
 import org.terasology.projsndwv.components.MatedComponent;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.protobuf.EntityData;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.BaseInteractionScreen;
@@ -119,9 +118,16 @@ public class ApiaryScreen extends BaseInteractionScreen {
             if (matingComponent.mateFinishTime <= time.getGameTimeInMs()) {
                 interactionTarget.removeComponent(ApiaryMatingComponent.class);
 
-                EntityRef femaleBee = getInteractionTarget().getComponent(InventoryComponent.class).itemSlots.get(0); // TODO: slot constants
-                EntityRef maleBee = getInteractionTarget().getComponent(InventoryComponent.class).itemSlots.get(1);
-                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), CoreRegistry.get(EntityManager.class)));
+                EntityManager entityManager = CoreRegistry.get(EntityManager.class);
+                if (entityManager == null) {
+                    // TODO: Log
+                    return;
+                }
+
+                EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0); // TODO: slot constants
+                GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
+                EntityRef maleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(1);
+                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(2)), entityManager)); // TODO: genome constant
                 BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
                 beeComponent.type = BeeComponent.BeeType.QUEEN;
                 femaleBee.saveComponent(beeComponent);
@@ -130,6 +136,14 @@ public class ApiaryScreen extends BaseInteractionScreen {
                 femaleBee.saveComponent(itemComponent);
                 femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(0), 2));
                 maleBee.destroy();
+
+                DelayManager delayManager = CoreRegistry.get(DelayManager.class);
+                if (delayManager == null) {
+                    // TODO: Log
+                    return;
+                }
+
+                delayManager.addDelayedAction(interactionTarget, "life_tick", TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(1))); // TODO: genome constant
             }
             else {
                 lifespanBar.setColor(Color.RED);
@@ -137,7 +151,15 @@ public class ApiaryScreen extends BaseInteractionScreen {
             }
         }
         else {
-            lifespanBar.setFill(0f);
+            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0);
+            if (femaleBee.hasComponent(MatedComponent.class)) {
+                lifespanBar.setColor(Color.YELLOW);
+                MatedComponent matedComponent = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0).getComponent(MatedComponent.class);
+                lifespanBar.setFill((float)matedComponent.ticksRemaining / matedComponent.lifespan);
+            }
+            else {
+                lifespanBar.setFill(0f);
+            }
         }
     }
 
