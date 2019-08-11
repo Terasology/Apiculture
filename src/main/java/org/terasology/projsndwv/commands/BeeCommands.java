@@ -21,34 +21,18 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.characters.CharacterHeldItemComponent;
 import org.terasology.logic.console.commandSystem.annotations.Command;
-import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
-import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.inventory.events.DropItemEvent;
-import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.network.ClientComponent;
-import org.terasology.projsndwv.TempBeeRegistry;
 import org.terasology.projsndwv.components.BeeComponent;
 import org.terasology.projsndwv.components.MatedComponent;
-import org.terasology.projsndwv.genetics.Genome;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
-import org.terasology.world.generator.WorldGenerator;
-
-import java.util.Iterator;
 
 @RegisterSystem
 public class BeeCommands extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
-
-    @In
-    private WorldGenerator worldGenerator;
-
-    private EntityRef mateTarget = null;
-
-    private Genome genome;
 
     @Command(value = "beeDumpGenes",
             shortDescription = "Shows the genes of a held bee",
@@ -95,65 +79,5 @@ public class BeeCommands extends BaseComponentSystem {
             }
         }
         return sb.toString();
-    }
-
-    @Command(value = "beeBirth",
-            shortDescription = "Causes a held queen to give birth",
-            helpText = "Causes a held queen to give birth to a new generation, according to the mechanics of genetics. If provided, the generation will have <count> drones. Otherwise, it'll have 2.",
-            runOnServer = true,
-            requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String birth(@Sender EntityRef client, @CommandParam(value = "count", required = false)Integer count) {
-        if (count == null) {
-            count = 2;
-        }
-
-        EntityRef item = client.getComponent(ClientComponent.class).character.getComponent(CharacterHeldItemComponent.class).selectedItem;
-        BeeComponent beeComponent = item.getComponent(BeeComponent.class);
-        if (beeComponent == null || !item.hasComponent(MatedComponent.class) || beeComponent.type != BeeComponent.BeeType.QUEEN) {
-            return "Held item is not a queen.";
-        }
-
-        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(item.getComponent(GeneticsComponent.class), item.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
-
-        EntityRef drop = entityManager.create("Apiculture:bee_princess");
-        drop.addComponent(offspringGenetics.next());
-        ItemComponent itemComponent = drop.getComponent(ItemComponent.class);
-        itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(drop.getComponent(GeneticsComponent.class).activeGenes.get(0), 1);
-        drop.addComponent(itemComponent);
-        drop.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(drop.getComponent(GeneticsComponent.class).activeGenes.get(0), 1));
-        drop.send(new DropItemEvent(client.getComponent(ClientComponent.class).character.getComponent(LocationComponent.class).getWorldPosition()));
-
-        for (int i = 0; i < count; i++) {
-            drop = entityManager.create("Apiculture:bee_drone");
-            drop.addComponent(offspringGenetics.next());
-            itemComponent = drop.getComponent(ItemComponent.class);
-            itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(drop.getComponent(GeneticsComponent.class).activeGenes.get(0), 0);
-            drop.addComponent(itemComponent);
-            drop.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(drop.getComponent(GeneticsComponent.class).activeGenes.get(0), 0));
-            drop.send(new DropItemEvent(client.getComponent(ClientComponent.class).character.getComponent(LocationComponent.class).getWorldPosition()));
-        }
-
-        return "";
-    }
-
-    private Genome getGenome() {
-        if (genome == null) {
-            genome = new Genome(4, worldGenerator.getWorldSeed().hashCode());
-
-            GeneticsComponent beeCComponent = new GeneticsComponent(4);
-
-            beeCComponent.activeGenes.add(2); // TODO: (Soundwave) This is bad, both because the size isn't ensured, and because it's messy.
-            beeCComponent.activeGenes.add(2);
-            beeCComponent.activeGenes.add(2);
-            beeCComponent.activeGenes.add(4);
-
-            beeCComponent.inactiveGenes.add(2);
-            beeCComponent.inactiveGenes.add(2);
-            beeCComponent.inactiveGenes.add(2);
-            beeCComponent.inactiveGenes.add(4);
-
-            genome.registerMutation(0, 0, 1, beeCComponent, 0.05f);
-        }
-        return genome;
     }
 }

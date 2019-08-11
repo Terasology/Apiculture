@@ -39,7 +39,6 @@ import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
 public class ApiaryScreen extends BaseInteractionScreen {
     private InventoryGrid inventory;
     private InventoryGrid female;
@@ -128,6 +127,7 @@ public class ApiaryScreen extends BaseInteractionScreen {
                     return;
                 }
 
+                // TODO: Move to ApiarySystem
                 EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
                 GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
                 EntityRef maleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_MALE);
