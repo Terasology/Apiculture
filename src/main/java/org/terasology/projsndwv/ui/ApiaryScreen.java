@@ -15,6 +15,8 @@
  */
 package org.terasology.projsndwv.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -27,7 +29,7 @@ import org.terasology.projsndwv.components.ApiaryMatingComponent;
 import org.terasology.projsndwv.components.BeeComponent;
 import org.terasology.projsndwv.components.MatedComponent;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
-import org.terasology.protobuf.EntityData;
+import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.BaseInteractionScreen;
@@ -49,6 +51,8 @@ public class ApiaryScreen extends BaseInteractionScreen {
 
     @In
     private Time time;
+
+    private static final Logger logger = LoggerFactory.getLogger(ApiaryScreen.class);
 
     @Override
     protected void initializeWithInteractionTarget(EntityRef interactionTarget) {
@@ -120,41 +124,41 @@ public class ApiaryScreen extends BaseInteractionScreen {
 
                 EntityManager entityManager = CoreRegistry.get(EntityManager.class);
                 if (entityManager == null) {
-                    // TODO: Log
+                    logger.error("No EntityManager in registry");
                     return;
                 }
 
-                EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0); // TODO: slot constants
+                EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
                 GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
-                EntityRef maleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(1);
-                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(2)), entityManager)); // TODO: genome constant
+                EntityRef maleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_MALE);
+                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_LIFESPAN)), entityManager));
                 BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
                 beeComponent.type = BeeComponent.BeeType.QUEEN;
                 femaleBee.saveComponent(beeComponent);
                 ItemComponent itemComponent = femaleBee.getComponent(ItemComponent.class);
-                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(0), 2);
+                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2);
                 femaleBee.saveComponent(itemComponent);
-                femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(0), 2));
+                femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2));
                 maleBee.destroy();
 
                 DelayManager delayManager = CoreRegistry.get(DelayManager.class);
                 if (delayManager == null) {
-                    // TODO: Log
+                    logger.error("No DelayManager in registry");
                     return;
                 }
 
-                delayManager.addDelayedAction(interactionTarget, "life_tick", TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(1))); // TODO: genome constant
+                delayManager.addDelayedAction(interactionTarget, ApiarySystem.LIFE_TICK_ACTION, TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_SPEED)));
             }
             else {
                 lifespanBar.setColor(Color.RED);
-                lifespanBar.setFill((1000 + time.getGameTimeInMs() - matingComponent.mateFinishTime) / 1000f); // TODO: Make mating time constant
+                lifespanBar.setFill((ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.mateFinishTime) / (float)ApiarySystem.MATING_TIME);
             }
         }
         else {
-            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0);
+            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
             if (femaleBee.hasComponent(MatedComponent.class)) {
                 lifespanBar.setColor(Color.YELLOW);
-                MatedComponent matedComponent = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(0).getComponent(MatedComponent.class);
+                MatedComponent matedComponent = femaleBee.getComponent(MatedComponent.class);
                 lifespanBar.setFill((float)matedComponent.ticksRemaining / matedComponent.lifespan);
             }
             else {

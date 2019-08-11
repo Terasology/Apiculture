@@ -15,14 +15,24 @@
  */
 package org.terasology.projsndwv.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.Component;
+import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 
 public final class ApiaryMatingComponent implements Component {
     public long mateFinishTime;
 
+    private static final Logger logger = LoggerFactory.getLogger(ApiaryMatingComponent.class);
+
     public ApiaryMatingComponent() {
-        mateFinishTime = CoreRegistry.get(Time.class).getGameTimeInMs() + 1000L;
+        Time time = CoreRegistry.get(Time.class);
+        if (time == null) {
+            logger.error("No Time in registry");
+            return;
+        }
+        mateFinishTime = time.getGameTimeInMs() + ApiarySystem.MATING_TIME;
     }
 }
