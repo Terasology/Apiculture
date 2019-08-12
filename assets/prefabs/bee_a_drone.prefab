@@ -4,7 +4,8 @@
     "name" : "A Drone"
   },
   "Item" : {
-    "icon" : "Apiculture:bee_a_drone"
+    "icon" : "Apiculture:bee_a_drone",
+    "stackId" : "Apiculture:drone"
   },
   "Genetics" : {
     "size" : 4,

@@ -15,20 +15,12 @@
  */
 package org.terasology.projsndwv.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.projsndwv.TempBeeRegistry;
 import org.terasology.projsndwv.components.ApiaryMatingComponent;
-import org.terasology.projsndwv.components.BeeComponent;
 import org.terasology.projsndwv.components.MatedComponent;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
@@ -50,8 +42,6 @@ public class ApiaryScreen extends BaseInteractionScreen {
 
     @In
     private Time time;
-
-    private static final Logger logger = LoggerFactory.getLogger(ApiaryScreen.class);
 
     @Override
     protected void initializeWithInteractionTarget(EntityRef interactionTarget) {
@@ -118,41 +108,8 @@ public class ApiaryScreen extends BaseInteractionScreen {
         EntityRef interactionTarget = getInteractionTarget();
         ApiaryMatingComponent matingComponent = interactionTarget.getComponent(ApiaryMatingComponent.class);
         if (matingComponent != null) {
-            if (matingComponent.mateFinishTime <= time.getGameTimeInMs()) {
-                interactionTarget.removeComponent(ApiaryMatingComponent.class);
-
-                EntityManager entityManager = CoreRegistry.get(EntityManager.class);
-                if (entityManager == null) {
-                    logger.error("No EntityManager in registry");
-                    return;
-                }
-
-                // TODO: Move to ApiarySystem
-                EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
-                GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
-                EntityRef maleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_MALE);
-                femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_LIFESPAN)), entityManager));
-                BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
-                beeComponent.type = BeeComponent.BeeType.QUEEN;
-                femaleBee.saveComponent(beeComponent);
-                ItemComponent itemComponent = femaleBee.getComponent(ItemComponent.class);
-                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2);
-                femaleBee.saveComponent(itemComponent);
-                femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2));
-                maleBee.destroy();
-
-                DelayManager delayManager = CoreRegistry.get(DelayManager.class);
-                if (delayManager == null) {
-                    logger.error("No DelayManager in registry");
-                    return;
-                }
-
-                delayManager.addDelayedAction(interactionTarget, ApiarySystem.LIFE_TICK_ACTION, TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_SPEED)));
-            }
-            else {
-                lifespanBar.setColor(Color.RED);
-                lifespanBar.setFill((ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.mateFinishTime) / (float)ApiarySystem.MATING_TIME);
-            }
+            lifespanBar.setColor(Color.RED);
+            lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.mateFinishTime, ApiarySystem.MATING_TIME) / (float)ApiarySystem.MATING_TIME);
         }
         else {
             EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);

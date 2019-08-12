@@ -60,7 +60,8 @@ public class ApiarySystem extends BaseComponentSystem {
     @In
     private WorldGenerator worldGenerator;
 
-    public static final String LIFE_TICK_ACTION = "life_tick";
+    public static final String LIFE_TICK_EVENT = "life_tick";
+    public static final String MATING_EVENT = "mating";
 
     private static final Logger logger = LoggerFactory.getLogger(ApiarySystem.class);
 
@@ -105,29 +106,37 @@ public class ApiarySystem extends BaseComponentSystem {
         if (event.getSlot() == SLOT_FEMALE) {
             if (!event.getNewItem().hasComponent(BeeComponent.class)) {
                 entity.removeComponent(ApiaryMatingComponent.class);
-                if (delayManager.hasDelayedAction(entity, LIFE_TICK_ACTION)) {
-                    delayManager.cancelDelayedAction(entity, LIFE_TICK_ACTION);
+                if (delayManager.hasDelayedAction(entity, MATING_EVENT)) {
+                    delayManager.cancelDelayedAction(entity, MATING_EVENT);
+                }
+                if (delayManager.hasDelayedAction(entity, LIFE_TICK_EVENT)) {
+                    delayManager.cancelDelayedAction(entity, LIFE_TICK_EVENT);
                 }
             }
             else if (event.getNewItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.PRINCESS){
                 BeeComponent maleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_MALE).getComponent(BeeComponent.class);
                 if (maleBee != null) {
                     entity.addOrSaveComponent(new ApiaryMatingComponent());
+                    delayManager.addDelayedAction(entity, MATING_EVENT, MATING_TIME);
                 }
             }
             else {
-                delayManager.addDelayedAction(entity, LIFE_TICK_ACTION, TempBeeRegistry.getTickTimeFromGenome(event.getNewItem().getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
+                delayManager.addDelayedAction(entity, LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(event.getNewItem().getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
             }
         }
         else if (event.getSlot() == SLOT_MALE){
             if (!event.getNewItem().hasComponent(BeeComponent.class)) {
                 entity.removeComponent(ApiaryMatingComponent.class);
+                if (delayManager.hasDelayedAction(entity, MATING_EVENT)) {
+                    delayManager.cancelDelayedAction(entity, MATING_EVENT);
+                }
             }
             else {
                 BeeComponent femaleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE).getComponent(BeeComponent.class);
                 if (femaleBee != null) {
                     if (femaleBee.type == BeeComponent.BeeType.PRINCESS) {
                         entity.addOrSaveComponent(new ApiaryMatingComponent());
+                        delayManager.addDelayedAction(entity, MATING_EVENT, MATING_TIME);
                     }
                 }
             }
@@ -135,45 +144,80 @@ public class ApiarySystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void onApiaryLifeTick(DelayedActionTriggeredEvent event, EntityRef entity, ApiaryComponent component) {
-        EntityRef queenBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE);
-        MatedComponent matedComponent = queenBee.getComponent(MatedComponent.class);
-        matedComponent.ticksRemaining--;
-        if (matedComponent.ticksRemaining == 0) {
-            Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queenBee.getComponent(GeneticsComponent.class), queenBee.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+    public void onApiaryEvent(DelayedActionTriggeredEvent event, EntityRef entity, ApiaryComponent component) {
+        if (event.getActionId().equals(LIFE_TICK_EVENT)) {
+            EntityRef queenBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE);
 
-            EntityRef offspring = entityManager.create("Apiculture:bee_princess");
-            GeneticsComponent geneticsComponent = offspringGenetics.next();
-            offspring.addComponent(geneticsComponent);
-            ItemComponent itemComponent = offspring.getComponent(ItemComponent.class);
-            int species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
-            itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 1);
-            offspring.addComponent(itemComponent);
-            offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 1));
-            boolean success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
+            GeneticsComponent queenGenetics = queenBee.getComponent(GeneticsComponent.class);
+            inventoryManager.giveItem(entity, entity, TempBeeRegistry.getProduceForSpeciesWithChance(queenGenetics.activeGenes.get(LOCUS_SPECIES)), SLOTS_OUT);
 
-            if (success) {
-                for (int i = 0; i < queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_OFFSPRING_COUNT); i++) {
-                    offspring = entityManager.create("Apiculture:bee_drone");
-                    geneticsComponent = offspringGenetics.next();
-                    offspring.addComponent(geneticsComponent);
-                    itemComponent = offspring.getComponent(ItemComponent.class);
-                    species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
-                    itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 0);
-                    offspring.addComponent(itemComponent);
-                    offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 0));
-                    success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
-                    if (!success) {
-                        break;
+            MatedComponent matedComponent = queenBee.getComponent(MatedComponent.class);
+            matedComponent.ticksRemaining--;
+            if (matedComponent.ticksRemaining == 0) {
+                Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queenGenetics, queenBee.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+
+                EntityRef offspring = entityManager.create("Apiculture:bee_princess");
+                GeneticsComponent geneticsComponent = offspringGenetics.next();
+                offspring.addComponent(geneticsComponent);
+                ItemComponent itemComponent = offspring.getComponent(ItemComponent.class);
+                int species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
+                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 1);
+                offspring.addComponent(itemComponent);
+                offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 1));
+                boolean success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
+
+                if (success) {
+                    for (int i = 0; i < queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_OFFSPRING_COUNT); i++) {
+                        offspring = entityManager.create("Apiculture:bee_drone");
+                        geneticsComponent = offspringGenetics.next();
+                        offspring.addComponent(geneticsComponent);
+                        itemComponent = offspring.getComponent(ItemComponent.class);
+                        species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
+                        itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 0);
+                        offspring.addComponent(itemComponent);
+                        offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 0));
+                        success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
+                        if (!success) {
+                            break;
+                        }
                     }
                 }
+
+                queenBee.destroy();
+            } else {
+                queenBee.saveComponent(matedComponent);
+                delayManager.addDelayedAction(entity, LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
+            }
+        }
+        else if (event.getActionId().equals(MATING_EVENT)) {
+            entity.removeComponent(ApiaryMatingComponent.class);
+
+            EntityManager entityManager = CoreRegistry.get(EntityManager.class);
+            if (entityManager == null) {
+                logger.error("No EntityManager in registry");
+                return;
             }
 
-            queenBee.destroy();
-        }
-        else {
-            queenBee.saveComponent(matedComponent);
-            delayManager.addDelayedAction(entity, LIFE_TICK_ACTION, TempBeeRegistry.getTickTimeFromGenome(queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
+            EntityRef femaleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
+            GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
+            EntityRef maleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_MALE);
+            femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_LIFESPAN)), entityManager));
+            BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
+            beeComponent.type = BeeComponent.BeeType.QUEEN;
+            femaleBee.saveComponent(beeComponent);
+            ItemComponent itemComponent = femaleBee.getComponent(ItemComponent.class);
+            itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2);
+            femaleBee.saveComponent(itemComponent);
+            femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2));
+            maleBee.destroy();
+
+            DelayManager delayManager = CoreRegistry.get(DelayManager.class);
+            if (delayManager == null) {
+                logger.error("No DelayManager in registry");
+                return;
+            }
+
+            delayManager.addDelayedAction(entity, ApiarySystem.LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_SPEED)));
         }
     }
 

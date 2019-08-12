@@ -18,18 +18,28 @@ package org.terasology.projsndwv.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.logic.inventory.ItemDifferentiating;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 
-public final class MatedComponent implements Component {
+public final class MatedComponent implements Component, ItemDifferentiating {
     public EntityRef container;
     public int ticksRemaining;
     public int lifespan;
 
+    @SuppressWarnings("unused")
     public MatedComponent() {}
 
     public MatedComponent(GeneticsComponent geneticsComponent, int lifespan, EntityManager entityManager) {
         container = entityManager.create(geneticsComponent);
         this.lifespan = lifespan;
         ticksRemaining = lifespan;
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof MatedComponent)) {
+            return false;
+        }
+        MatedComponent matedComponent = ((MatedComponent)o);
+        return ticksRemaining == matedComponent.ticksRemaining && lifespan == matedComponent.lifespan && container.getComponent(GeneticsComponent.class).equals(container.getComponent(GeneticsComponent.class));
     }
 }

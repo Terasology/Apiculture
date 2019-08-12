@@ -16,8 +16,9 @@
 package org.terasology.projsndwv.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.logic.inventory.ItemDifferentiating;
 
-public final class BeeComponent implements Component {
+public final class BeeComponent implements Component, ItemDifferentiating {
     /**
      * Bee type, that is, whether a bee is a drone, princess, or queen.
      */
@@ -27,5 +28,12 @@ public final class BeeComponent implements Component {
         DRONE,
         PRINCESS,
         QUEEN
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof BeeComponent)) {
+            return false;
+        }
+        return ((BeeComponent)o).type == type;
     }
 }
