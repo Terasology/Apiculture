@@ -15,20 +15,20 @@
  */
 package org.terasology.projsndwv;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.utilities.random.MersenneRandom;
-import org.terasology.world.generation.World;
 import org.terasology.world.generator.WorldGenerator;
 
 import java.util.HashMap;
-import java.util.Random;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A temporary class providing helpers intended to be provided by a future bee registry.
@@ -40,8 +40,23 @@ public class TempBeeRegistry {
 
     private static MersenneRandom random;
 
+    private static Logger logger = LoggerFactory.getLogger(TempBeeRegistry.class);
+
     public static TextureRegionAsset<?> getTextureRegionAssetForSpeciesAndType(int species, int type) {
-        return (TextureRegionAsset<?>)CoreRegistry.get(AssetManager.class).getAsset("Apiculture:bee_" + new String[] {"a", "b", "c"}[species] + "_" + new String[] {"drone", "princess", "queen"}[type], TextureRegionAsset.class).get();
+        AssetManager assetManager = CoreRegistry.get(AssetManager.class);
+        if (assetManager == null) {
+            logger.error("No AssetManager in registry");
+            return null;
+        }
+
+        // TODO: This call can probably be checked, but it'll take a serious refactor.
+        Optional<TextureRegionAsset> textureRegionAsset = assetManager.getAsset("Apiculture:bee_" + new String[]{"a", "b", "c"}[species] + "_" + new String[]{"drone", "princess", "queen"}[type], TextureRegionAsset.class);
+        if (!textureRegionAsset.isPresent()) {
+            logger.error("Texture not found for species " + species + " and type " + type);
+            return null;
+        }
+
+        return textureRegionAsset.get();
     }
 
     public static DisplayNameComponent getDisplayNameComponentForSpeciesAndType(int species, int type) {
@@ -62,8 +77,13 @@ public class TempBeeRegistry {
         MersenneRandom random = getRandom();
         Production production = productions.get(species);
 
-        if (random.nextFloat() < production.chance) {
-            return CoreRegistry.get(EntityManager.class).create(production.prefab);
+        if (Objects.requireNonNull(random).nextFloat() < production.chance) {
+            EntityManager entityManager = CoreRegistry.get(EntityManager.class);
+            if (entityManager == null) {
+                logger.error("No EntityManager in registry");
+                return null;
+            }
+            return entityManager.create(production.prefab);
         }
         else {
             return EntityRef.NULL;
@@ -72,7 +92,12 @@ public class TempBeeRegistry {
 
     private static MersenneRandom getRandom() {
         if (random == null) {
-            random = new MersenneRandom(CoreRegistry.get(WorldGenerator.class).getWorldSeed().hashCode());
+            WorldGenerator worldGenerator = CoreRegistry.get(WorldGenerator.class);
+            if (worldGenerator == null) {
+                logger.error("No WorldGenerator in registry");
+                return null;
+            }
+            random = new MersenneRandom(worldGenerator.getWorldSeed().hashCode());
         }
         return random;
     }

@@ -22,6 +22,9 @@ import org.terasology.entitySystem.Component;
 import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 
+/***
+ * Indicates to ApiaryScreen that bees are currently mating in an apiary.
+ */
 public final class ApiaryMatingComponent implements Component {
     public long mateFinishTime;
 

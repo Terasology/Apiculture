@@ -46,6 +46,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Handles Apiary related events. Also contains a number of apiary related constants.
+ */
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ApiarySystem extends BaseComponentSystem {
     @In
@@ -60,23 +63,63 @@ public class ApiarySystem extends BaseComponentSystem {
     @In
     private WorldGenerator worldGenerator;
 
-    public static final String LIFE_TICK_EVENT = "life_tick";
-    public static final String MATING_EVENT = "mating";
-
     private static final Logger logger = LoggerFactory.getLogger(ApiarySystem.class);
 
+    private Genome genome;
+
+    /**
+     * The delayed action id for life ticks.
+     */
+    public static final String LIFE_TICK_EVENT = "life_tick";
+
+    /**
+     * The delayed action id for the completion of mating.
+     */
+    public static final String MATING_EVENT = "mating";
+
+
+
+    /**
+     * The slot index for the princess/queen bee slot in an apiary's inventory.
+     */
     public static final int SLOT_FEMALE = 0;
+
+    /**
+     * The slot index for the drone bee slot in an apiary's inventory.
+     */
     public static final int SLOT_MALE = 1;
+
+    /**
+     * A list of slot indices for the otuput slots in an apiary's inventory.
+     */
     public static final List<Integer> SLOTS_OUT = Collections.unmodifiableList(Arrays.asList(2, 3, 4, 5, 6, 7, 8));
 
+
+
+    /**
+     * The locus in a bee's genetics indicating the species of a bee.
+     */
     public static final int LOCUS_SPECIES = 0;
+
+    /**
+     * The locus in a bee's genetics indicating the speed at which a bee's life ticks down.
+     */
     public static final int LOCUS_SPEED = 1;
+
+    /**
+     * The locus in a bee's genetics indicating the length of a bee's lifespan.
+     */
     public static final int LOCUS_LIFESPAN = 2;
+
+    /**
+     * The locus in a bee's genetics indicating the number of drone offspring a bee will have.
+     */
     public static final int LOCUS_OFFSPRING_COUNT = 3;
 
+    /**
+     * The time, in milliseconds, that mating takes in an apiary.
+     */
     public static final long MATING_TIME = 1000L;
-
-    private Genome genome;
 
     @ReceiveEvent
     public void beforeItemPutIntoApiary(BeforeItemPutInInventory event, EntityRef entity, ApiaryComponent component) {

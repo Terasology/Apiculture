@@ -18,6 +18,9 @@ package org.terasology.projsndwv.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.logic.inventory.ItemDifferentiating;
 
+/**
+ * Indicates that an item is a bee.
+ */
 public final class BeeComponent implements Component, ItemDifferentiating {
     /**
      * Bee type, that is, whether a bee is a drone, princess, or queen.
