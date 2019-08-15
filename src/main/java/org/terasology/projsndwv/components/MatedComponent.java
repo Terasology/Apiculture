@@ -40,7 +40,6 @@ public final class MatedComponent implements Component, ItemDifferentiating {
      */
     public int lifespan;
 
-    @SuppressWarnings("unused")
     public MatedComponent() {}
 
     public MatedComponent(GeneticsComponent geneticsComponent, int lifespan, EntityManager entityManager) {

@@ -15,27 +15,17 @@
  */
 package org.terasology.projsndwv.components;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.engine.Time;
 import org.terasology.entitySystem.Component;
-import org.terasology.projsndwv.systems.ApiarySystem;
-import org.terasology.registry.CoreRegistry;
 
 /***
- * Indicates to ApiaryScreen that bees are currently mating in an apiary.
+ * Indicates to ApiaryScreen that bees are currently mating in an apiary, and at what game time they will finish.
  */
 public final class ApiaryMatingComponent implements Component {
     public long mateFinishTime;
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiaryMatingComponent.class);
+    public ApiaryMatingComponent() {}
 
-    public ApiaryMatingComponent() {
-        Time time = CoreRegistry.get(Time.class);
-        if (time == null) {
-            logger.error("No Time in registry");
-            return;
-        }
-        mateFinishTime = time.getGameTimeInMs() + ApiarySystem.MATING_TIME;
+    public ApiaryMatingComponent(long finishTime) {
+        mateFinishTime = finishTime;
     }
 }
