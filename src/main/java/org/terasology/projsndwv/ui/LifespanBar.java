@@ -36,10 +36,22 @@ public class LifespanBar extends CoreWidget {
         return new Vector2i(8, 48);
     }
 
+    /**
+     * Sets the color of the lifespan bar's fill.
+     *
+     * @param color The new color.
+     */
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * Sets the amount the lifespan bar is filled, as a decimal.
+     *
+     * Fill value is clamped between 0 and 1.
+     *
+     * @param value The percentge of the lifespan bar fill, expressed as a decimal.
+     */
     public void setFill(float value) {
         if (value > 1f) {
             this.value = 1f;

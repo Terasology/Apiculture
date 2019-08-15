@@ -120,6 +120,12 @@ public class ApiarySystem extends BaseComponentSystem {
      */
     public static final long MATING_TIME = 1000L;
 
+    /**
+     * Consumes BeforeItemPutInInventory events, handling inventory access controls.
+     *
+     * Prevents non-bees from being placed into the apiary, bees being placed
+     * into the slot inappropriate for its sex, and any items being placed into the output.
+     */
     @ReceiveEvent
     public void beforeItemPutIntoApiary(BeforeItemPutInInventory event, EntityRef entity, ApiaryComponent component) {
         if (event.getSlot() == SLOT_FEMALE) {
@@ -137,6 +143,13 @@ public class ApiarySystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Receives inventory change events, scheduling appropriate functional events.
+     *
+     * Schedules a lifespan tick if a queen is placed into the top slot, a mating end event if a princess-drone pair is
+     * completed, and cancels appropriate scheduled events if the queen is removed or the princess-drone pair is broken
+     * before mating is complete.
+     */
     @ReceiveEvent
     public void onApiaryInventoryChanged(InventorySlotChangedEvent event, EntityRef entity, ApiaryComponent component) {
         if (event.getSlot() == SLOT_FEMALE) {
@@ -179,6 +192,9 @@ public class ApiarySystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Receives and sorts Apiary-related delayed actions, namely lifespan ticks and mating end events.
+     */
     @ReceiveEvent
     public void onApiaryEvent(DelayedActionTriggeredEvent event, EntityRef entity, ApiaryComponent component) {
         if (event.getActionId().equals(LIFE_TICK_EVENT)) {
@@ -189,6 +205,13 @@ public class ApiarySystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Handles a lifespan tick for a queen in a given apiary.
+     *
+     * Generating produce, updates the remaining lifespan, and triggers birthing if the end of lifespan has been reached.
+     *
+     * @param entity The apiary containing the queen for which a lifespan tick is to be completed.
+     */
     private void onLifeTick(EntityRef entity) {
         EntityRef queenBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE);
 
@@ -199,15 +222,23 @@ public class ApiarySystem extends BaseComponentSystem {
         matedComponent.ticksRemaining--;
 
         if (matedComponent.ticksRemaining == 0) {
-            birth(queenBee, entity);
+            birth(entity);
         } else {
             queenBee.saveComponent(matedComponent);
             delayManager.addDelayedAction(entity, LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
         }
     }
 
-    private void birth(EntityRef queen, EntityRef apiary) {
-        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queen.getComponent(GeneticsComponent.class), queen.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+    /**
+     * Handles queen birthing in a given apiary.
+     *
+     * Generates offspring, placing them into the apiary's output if room is present, and destroys the queen.
+     *
+     * @param entity The apiary contianing the queen to give birth.
+     */
+    private void birth(EntityRef entity) {
+        EntityRef queenBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE);
+        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queenBee.getComponent(GeneticsComponent.class), queenBee.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
 
         EntityRef offspring = entityManager.create("Apiculture:bee_princess");
         GeneticsComponent geneticsComponent = offspringGenetics.next();
@@ -217,10 +248,10 @@ public class ApiarySystem extends BaseComponentSystem {
         itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 1);
         offspring.addComponent(itemComponent);
         offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 1));
-        boolean success = inventoryManager.giveItem(apiary, apiary, offspring, SLOTS_OUT);
+        boolean success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
 
         if (success) {
-            for (int i = 0; i < queen.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_OFFSPRING_COUNT); i++) {
+            for (int i = 0; i < queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_OFFSPRING_COUNT); i++) {
                 offspring = entityManager.create("Apiculture:bee_drone");
                 geneticsComponent = offspringGenetics.next();
                 offspring.addComponent(geneticsComponent);
@@ -229,16 +260,24 @@ public class ApiarySystem extends BaseComponentSystem {
                 itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 0);
                 offspring.addComponent(itemComponent);
                 offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 0));
-                success = inventoryManager.giveItem(apiary, apiary, offspring, SLOTS_OUT);
+                success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
                 if (!success) {
                     break;
                 }
             }
         }
 
-        queen.destroy();
+        queenBee.destroy();
     }
 
+    /**
+     * Handles mating for a given apiary.
+     *
+     * Turns the princess in an apiary into a queen containing the drone's genetics, destroying the drone, and schedules
+     * the first lifespan tick.
+     *
+     * @param entity The apiary containing the princess and drone to mate.
+     */
     private void onMatingFinished(EntityRef entity) {
         entity.removeComponent(ApiaryMatingComponent.class);
 
