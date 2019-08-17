@@ -1,0 +1,114 @@
+{
+  "type": "Apiculture:ExtractorScreen",
+  "skin": "apiary",
+  "contents": {
+    "type": "RelativeLayout",
+    "contents": [
+      {
+        "type": "UIBox",
+        "layoutInfo": {
+          "position-top": {
+            "target": "TOP",
+            "widget": "content",
+            "offset": -10
+          },
+          "position-bottom" : {
+            "target": "BOTTOM",
+            "widget": "content",
+            "offset": -10
+          },
+          "position-left": {
+            "target": "LEFT",
+            "widget": "content",
+            "offset": -10
+          },
+          "position-right": {
+            "target": "RIGHT",
+            "widget": "content",
+            "offset": -10
+          }
+        }
+      },
+      {
+        "type": "ColumnLayout",
+        "id": "content",
+        "verticalSpacing": 10,
+        "layoutInfo": {
+          "use-content-height": true,
+          "use-content-width": true,
+          "position-vertical-center": {},
+          "position-horizontal-center": {}
+        },
+        "contents": [
+          {
+            "type": "ColumnLayout",
+            "columns": 3,
+            "contents": [
+              {
+                "type": "VerticalFiller",
+                "size": 180
+              },
+              {
+                "type": "ColumnLayout",
+                "verticalSpacing": 10,
+                "contents": [
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "InventoryGrid",
+                        "id": "input",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "use-content-height": true,
+                          "position-horizontal-center": {}
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "LifespanBar",
+                        "id": "progressBar",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "use-content-height": true,
+                          "position-horizontal-center": {}
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "RelativeLayout",
+                    "contents": [
+                      {
+                        "type": "InventoryGrid",
+                        "id": "output",
+                        "layoutInfo": {
+                          "use-content-width": true,
+                          "use-content-height": true,
+                          "position-horizontal-center": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "VerticalFiller",
+                "size": 180
+              }
+            ]
+          },
+          {
+            "type": "InventoryGrid",
+            "id": "inventory"
+          }
+        ]
+      }
+    ]
+  }
+  }
+}

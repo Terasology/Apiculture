@@ -21,6 +21,8 @@ import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.projsndwv.components.ApiaryComponent;
+import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.utilities.random.MersenneRandom;
@@ -37,6 +39,7 @@ public class TempBeeRegistry {
     private static HashMap<Integer, Integer> lifespans = new HashMap<>();
     private static HashMap<Integer, Long> tickspeeds = new HashMap<>();
     private static HashMap<Integer, Production> productions = new HashMap<>();
+    private static HashMap<Integer, HashMap<Integer, String>> genotypeNames = new HashMap<>();
 
     private static MersenneRandom random;
 
@@ -90,7 +93,7 @@ public class TempBeeRegistry {
         }
     }
 
-    private static MersenneRandom getRandom() {
+    public static MersenneRandom getRandom() {
         if (random == null) {
             WorldGenerator worldGenerator = CoreRegistry.get(WorldGenerator.class);
             if (worldGenerator == null) {
@@ -100,6 +103,10 @@ public class TempBeeRegistry {
             random = new MersenneRandom(worldGenerator.getWorldSeed().hashCode());
         }
         return random;
+    }
+
+    public static String getDisplayNameComponentForLocusAndGenotype(int locus, int genotype) {
+        return genotypeNames.get(locus).get(genotype);
     }
 
     private static class Production {
@@ -117,9 +124,35 @@ public class TempBeeRegistry {
         lifespans.put(1, 6);
         lifespans.put(2, 9);
 
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "Short Life");
+        map.put(1, "Normal Life");
+        map.put(2, "Long Life");
+
+        genotypeNames.put(ApiarySystem.LOCUS_LIFESPAN, map);
+
         tickspeeds.put(0, 100000L);
         tickspeeds.put(1, 75000L);
         tickspeeds.put(2, 50000L);
+
+        map = new HashMap<>();
+        map.put(0, "Slow Speed");
+        map.put(1, "Normal Speed");
+        map.put(2, "Fast Speed");
+
+        genotypeNames.put(ApiarySystem.LOCUS_SPEED, map);
+
+        map = new HashMap<>();
+        map.put(1, "Single Offspring");
+        map.put(2, "Double Offspring");
+        map.put(4, "Quadruple Offspring");
+        genotypeNames.put(ApiarySystem.LOCUS_OFFSPRING_COUNT, map);
+
+        map = new HashMap<>();
+        map.put(0, "Species A");
+        map.put(1, "Species B");
+        map.put(2, "Species C");
+        genotypeNames.put(ApiarySystem.LOCUS_SPECIES, map);
 
         productions.put(0, new Production(0.25f, "Apiculture:comb"));
         productions.put(1, new Production(0.25f, "Apiculture:comb"));

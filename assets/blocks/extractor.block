@@ -1,0 +1,12 @@
+{
+  "displayName": "Extractor",
+  "family": "horizontal",
+  "tiles": {
+    "all": "extractor_side",
+    "top": "extractor_top",
+    "bottom": "extractor_bottom"
+  },
+  "entity": {
+    "prefab": "extractor"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "engine:iconItem",
+  "Item": {
+    "icon": "Apiculture:genetic_sample",
+    "stackId": "Apiculture:genetic_sample"
+  }
+}

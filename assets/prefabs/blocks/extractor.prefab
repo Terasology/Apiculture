@@ -1,0 +1,11 @@
+{
+  "InteractionTarget": {},
+  "InteractionScreen": {
+    "screen": "Apiculture:extractor"
+  },
+  "Inventory": {
+    "privateToOwner": false,
+    "itemSlots": [0, 0]
+  },
+  "Extractor": {}
+}

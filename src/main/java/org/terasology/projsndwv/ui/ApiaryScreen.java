@@ -19,7 +19,7 @@ import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.projsndwv.components.ApiaryMatingComponent;
+import org.terasology.projsndwv.components.ProcessingComponent;
 import org.terasology.projsndwv.components.MatedComponent;
 import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
@@ -106,10 +106,10 @@ public class ApiaryScreen extends BaseInteractionScreen {
         super.update(delta);
 
         EntityRef interactionTarget = getInteractionTarget();
-        ApiaryMatingComponent matingComponent = interactionTarget.getComponent(ApiaryMatingComponent.class);
+        ProcessingComponent matingComponent = interactionTarget.getComponent(ProcessingComponent.class);
         if (matingComponent != null) {
             lifespanBar.setColor(Color.RED);
-            lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.mateFinishTime, ApiarySystem.MATING_TIME) / (float)ApiarySystem.MATING_TIME);
+            lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.finishTime, ApiarySystem.MATING_TIME) / (float)ApiarySystem.MATING_TIME);
         }
         else {
             EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);

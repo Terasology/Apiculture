@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.projsndwv.ui;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.math.geom.Vector2i;
+import org.terasology.rendering.nui.Canvas;
+import org.terasology.rendering.nui.CoreWidget;
+import org.terasology.rendering.nui.LayoutConfig;
 
-/***
- * Indicates to ApiaryScreen that bees are currently mating in an apiary, and at what game time they will finish.
- */
-public final class ApiaryMatingComponent implements Component {
-    public long mateFinishTime;
+public class VerticalFiller extends CoreWidget {
+    @LayoutConfig
+    private int size = 1;
 
-    public ApiaryMatingComponent() {}
+    @Override
+    public void onDraw(Canvas canvas) {}
 
-    public ApiaryMatingComponent(long finishTime) {
-        mateFinishTime = finishTime;
+    @Override
+    public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {
+        return new Vector2i(1, size);
     }
 }
