@@ -1,5 +1,5 @@
 {
-  "type": "Apiculture:ExtractorScreen",
+  "type": "Apiculture:InjectorScreen",
   "skin": "apiculture",
   "contents": {
     "type": "RelativeLayout",
@@ -85,7 +85,7 @@
                     "contents": [
                       {
                         "type": "InventoryGrid",
-                        "id": "output",
+                        "id": "bee",
                         "layoutInfo": {
                           "use-content-width": true,
                           "use-content-height": true,

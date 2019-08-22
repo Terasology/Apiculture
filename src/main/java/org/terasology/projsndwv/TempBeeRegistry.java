@@ -21,7 +21,10 @@ import org.terasology.assets.management.AssetManager;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.common.DisplayNameComponent;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.projsndwv.components.ApiaryComponent;
+import org.terasology.projsndwv.components.BeeComponent;
+import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.projsndwv.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.assets.texture.TextureRegionAsset;
@@ -45,7 +48,27 @@ public class TempBeeRegistry {
 
     private static Logger logger = LoggerFactory.getLogger(TempBeeRegistry.class);
 
-    public static TextureRegionAsset<?> getTextureRegionAssetForSpeciesAndType(int species, int type) {
+    public static EntityRef modifyItemForSpeciesAndType(EntityRef entity) {
+        if (!entity.hasComponent(BeeComponent.class)) {
+            return entity;
+        }
+
+        int species = entity.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES);
+        BeeComponent.BeeType type = entity.getComponent(BeeComponent.class).type;
+
+        String typeName = "NULL";
+        switch(type) {
+            case DRONE:
+                typeName = "Drone";
+                break;
+            case PRINCESS:
+                typeName = "Princess";
+                break;
+            case QUEEN:
+                typeName = "Queen";
+                break;
+        }
+
         AssetManager assetManager = CoreRegistry.get(AssetManager.class);
         if (assetManager == null) {
             logger.error("No AssetManager in registry");
@@ -53,19 +76,28 @@ public class TempBeeRegistry {
         }
 
         // TODO: This call can probably be checked, but it'll take a serious refactor.
-        Optional<TextureRegionAsset> textureRegionAsset = assetManager.getAsset("Apiculture:bee_" + new String[]{"a", "b", "c"}[species] + "_" + new String[]{"drone", "princess", "queen"}[type], TextureRegionAsset.class);
+        Optional<TextureRegionAsset> textureRegionAsset = assetManager.getAsset("Apiculture:bee_" + new String[]{"a", "b", "c"}[species] + "_" + typeName.toLowerCase(), TextureRegionAsset.class);
         if (!textureRegionAsset.isPresent()) {
-            logger.error("Texture not found for species " + species + " and type " + type);
+            logger.error("Texture not found for species " + species + " and type '" + typeName + "'");
             return null;
         }
 
-        return textureRegionAsset.get();
-    }
+        ItemComponent itemComponent = entity.getComponent(ItemComponent.class);
 
-    public static DisplayNameComponent getDisplayNameComponentForSpeciesAndType(int species, int type) {
+        if (type == BeeComponent.BeeType.DRONE) {
+            itemComponent.stackId = "Apiculture:drone";
+        }
+
+        itemComponent.icon = textureRegionAsset.get();
+
+        entity.addOrSaveComponent(itemComponent);
+
         DisplayNameComponent displayNameComponent = new DisplayNameComponent();
-        displayNameComponent.name = new String[] {"A", "B", "C"}[species] + " " + new String[] {"Drone", "Princess", "Queen"}[type];
-        return displayNameComponent;
+        displayNameComponent.name = new String[] {"A", "B", "C"}[species] + " " + typeName;
+
+        entity.addOrSaveComponent(displayNameComponent);
+
+        return entity;
     }
 
     public static int getLifespanFromGenome(int genome) {

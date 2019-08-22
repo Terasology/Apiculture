@@ -26,7 +26,6 @@ import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
-import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
 import org.terasology.logic.inventory.events.InventorySlotChangedEvent;
 import org.terasology.projsndwv.TempBeeRegistry;
@@ -243,11 +242,7 @@ public class ApiarySystem extends BaseComponentSystem {
         EntityRef offspring = entityManager.create("Apiculture:bee_princess");
         GeneticsComponent geneticsComponent = offspringGenetics.next();
         offspring.addComponent(geneticsComponent);
-        ItemComponent itemComponent = offspring.getComponent(ItemComponent.class);
-        int species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
-        itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 1);
-        offspring.addComponent(itemComponent);
-        offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 1));
+        TempBeeRegistry.modifyItemForSpeciesAndType(offspring);
         boolean success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
 
         if (success) {
@@ -255,11 +250,7 @@ public class ApiarySystem extends BaseComponentSystem {
                 offspring = entityManager.create("Apiculture:bee_drone");
                 geneticsComponent = offspringGenetics.next();
                 offspring.addComponent(geneticsComponent);
-                itemComponent = offspring.getComponent(ItemComponent.class);
-                species = geneticsComponent.activeGenes.get(LOCUS_SPECIES);
-                itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(species, 0);
-                offspring.addComponent(itemComponent);
-                offspring.addComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(species, 0));
+                TempBeeRegistry.modifyItemForSpeciesAndType(offspring);
                 success = inventoryManager.giveItem(entity, entity, offspring, SLOTS_OUT);
                 if (!success) {
                     break;
@@ -288,10 +279,7 @@ public class ApiarySystem extends BaseComponentSystem {
         BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
         beeComponent.type = BeeComponent.BeeType.QUEEN;
         femaleBee.saveComponent(beeComponent);
-        ItemComponent itemComponent = femaleBee.getComponent(ItemComponent.class);
-        itemComponent.icon = TempBeeRegistry.getTextureRegionAssetForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2);
-        femaleBee.saveComponent(itemComponent);
-        femaleBee.saveComponent(TempBeeRegistry.getDisplayNameComponentForSpeciesAndType(femaleBee.getComponent(GeneticsComponent.class).activeGenes.get(ApiarySystem.LOCUS_SPECIES), 2));
+        TempBeeRegistry.modifyItemForSpeciesAndType(femaleBee);
         maleBee.destroy();
 
         delayManager.addDelayedAction(entity, ApiarySystem.LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_SPEED)));

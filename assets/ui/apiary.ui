@@ -1,6 +1,6 @@
 {
   "type": "Apiculture:ApiaryScreen",
-  "skin": "apiary",
+  "skin": "apiculture",
   "contents": {
     "type": "RelativeLayout",
     "contents": [

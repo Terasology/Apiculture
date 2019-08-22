@@ -1,0 +1,12 @@
+{
+  "displayName": "Injector",
+  "family": "horizontal",
+  "tiles": {
+    "all": "injector_side",
+    "top": "injector_top",
+    "bottom": "injector_bottom"
+  },
+  "entity": {
+    "prefab": "injector"
+  }
+}
