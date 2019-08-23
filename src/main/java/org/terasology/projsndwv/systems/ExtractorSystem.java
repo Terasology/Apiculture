@@ -52,15 +52,35 @@ public class ExtractorSystem extends BaseComponentSystem {
     @In
     private InventoryManager inventoryManager;
 
+    /**
+     * The slot index for the input slot of the extractor.
+     */
     public static final int SLOT_INPUT = 0;
+
+    /**
+     * The slot index for the output slot of the extractor.
+     */
     public static final int SLOT_OUTPUT = 1;
 
+
+
+    /**
+     * The delayed action id for extraction completion.
+     */
     public static final String EXTRACT_EVENT = "extract";
 
+    /**
+     * The time, in milliseconds, that extraction takes.
+     */
     public static final long EXTRACT_TIME = 60000L;
 
     private MersenneRandom random = new MersenneRandom();
 
+    /**
+     * Consumes BeforeItemPutInInventory events, handling inventory access controls.
+     *
+     * Prevents non-bees from being placed into the extractor, and any items being placed into the output.
+     */
     @ReceiveEvent
     public void beforeItemPutIntoExtractor(BeforeItemPutInInventory event, EntityRef entity, ExtractorComponent component) {
         if (event.getSlot() == SLOT_INPUT) {
@@ -73,6 +93,11 @@ public class ExtractorSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Receives inventory change events, scheduling appropriate functional events.
+     *
+     * Schedules an extraction end event if a bee is placed in the input, and cancels appropriate events if the input is removed.
+     */
     @ReceiveEvent
     public void onExtractorItemChanged(InventorySlotChangedEvent event, EntityRef entity, ExtractorComponent component) {
         if (event.getSlot() == SLOT_INPUT) {
@@ -89,6 +114,10 @@ public class ExtractorSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Handles extraction end events, choosing a random locus from the input bees genetics, placing a sample of it in
+     * the output, and destroys the bee.
+     */
     @ReceiveEvent
     public void onExtractorEvent(DelayedActionTriggeredEvent event, EntityRef entity, ExtractorComponent component) {
         entity.removeComponent(ProcessingComponent.class);

@@ -207,7 +207,7 @@ public class ApiarySystem extends BaseComponentSystem {
     /**
      * Handles a lifespan tick for a queen in a given apiary.
      *
-     * Generating produce, updates the remaining lifespan, and triggers birthing if the end of lifespan has been reached.
+     * Generates produce, updates the remaining lifespan, and triggers birthing if the end of lifespan has been reached.
      *
      * @param entity The apiary containing the queen for which a lifespan tick is to be completed.
      */

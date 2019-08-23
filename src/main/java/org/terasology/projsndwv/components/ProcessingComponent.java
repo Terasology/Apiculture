@@ -19,7 +19,7 @@ import org.terasology.entitySystem.Component;
 
 /***
  * Indicates to screens that processes are occuring in an apiary, extractor, or injector, and at what game time they will
- * complate.
+ * complete.
  */
 public final class ProcessingComponent implements Component {
     public long finishTime;

@@ -20,7 +20,13 @@ import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.CoreWidget;
 import org.terasology.rendering.nui.LayoutConfig;
 
+/**
+ * A 1 pixel wide widget that fills vertical space in order to provide size hints to relative layouts.
+ */
 public class VerticalFiller extends CoreWidget {
+    /**
+     * The vertical height of this filler.
+     */
     @LayoutConfig
     private int size = 1;
 

@@ -50,13 +50,34 @@ public class InjectorSystem extends BaseComponentSystem {
     @In
     private InventoryManager inventoryManager;
 
+    /**
+     * The slot index for the sample input slot.
+     */
     public static final int SLOT_INPUT = 0;
+
+    /**
+     * The slot index for the bee input slot.
+     */
     public static final int SLOT_BEE = 1;
 
+
+    /**
+     * The delayed action id for injection completion.
+     */
     public static final String INJECT_EVENT = "inject";
 
+    /**
+     * The time, in milliseconds, that injection takes.
+     */
     public static final long INJECT_TIME = 60000L;
 
+
+    /**
+     * Consumes BeforeItemPutInInventory events, handling inventory access controls.
+     *
+     * Prevents non-bees from being placed into the bee input slot, and non-genetic sample items from being placed
+     * in the sample input slot.
+     */
     @ReceiveEvent
     public void beforeItemPutIntoInjector(BeforeItemPutInInventory event, EntityRef entity, InjectorComponent component) {
         if (event.getSlot() == SLOT_INPUT) {
@@ -71,6 +92,12 @@ public class InjectorSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Receives inventory change events, scheduling appropriate functional events.
+     *
+     * Schedules an injection end event if a bee and genetic sample are present in their respective slots,
+     * and cancels appropriate events if either input is removed.
+     */
     @ReceiveEvent
     public void onInjectorItemChanged(InventorySlotChangedEvent event, EntityRef entity, InjectorComponent component) {
         if (event.getSlot() == SLOT_INPUT) {
@@ -99,6 +126,9 @@ public class InjectorSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Handles injection end events, replacing the corresponding gene of the input bee with the gene in the sample.
+     */
     @ReceiveEvent
     public void onInjectorEvent(DelayedActionTriggeredEvent event, EntityRef entity, InjectorComponent component) {
         entity.removeComponent(ProcessingComponent.class);

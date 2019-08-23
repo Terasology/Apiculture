@@ -18,8 +18,18 @@ package org.terasology.projsndwv.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.logic.inventory.ItemDifferentiating;
 
+/**
+ * Indicates an item is a genetic sample, and stores the locus and genotype of the gene it is a sample of.
+ */
 public class LocusSampleComponent implements Component, ItemDifferentiating {
+    /**
+     * The locus of the gene this sample is of.
+     */
     public int locus;
+
+    /**
+     * The genotype of the gene this sample is of.
+     */
     public int genotype;
 
     public LocusSampleComponent() {}
