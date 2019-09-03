@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.commands;
+package org.terasology.apiculture.commands;
 
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -24,9 +24,9 @@ import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.logic.permission.PermissionManager;
 import org.terasology.network.ClientComponent;
-import org.terasology.projsndwv.components.BeeComponent;
-import org.terasology.projsndwv.components.MatedComponent;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.apiculture.components.MatedComponent;
+import org.terasology.apiculture.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
 
 @RegisterSystem

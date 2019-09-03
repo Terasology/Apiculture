@@ -13,9 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.apiculture.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.logic.inventory.ItemDifferentiating;
 
-public class ExtractorComponent implements Component {
+/**
+ * Indicates that an item is a bee.
+ */
+public final class BeeComponent implements Component, ItemDifferentiating {
+    /**
+     * Bee type, that is, whether a bee is a drone, princess, or queen.
+     */
+    public BeeType type;
+
+    public enum BeeType {
+        DRONE,
+        PRINCESS,
+        QUEEN
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof BeeComponent)) {
+            return false;
+        }
+        return ((BeeComponent)o).type == type;
+    }
 }

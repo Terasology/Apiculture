@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.systems;
+package org.terasology.apiculture.systems;
 
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -29,12 +29,12 @@ import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
 import org.terasology.logic.inventory.events.InventorySlotChangedEvent;
-import org.terasology.projsndwv.TempBeeRegistry;
-import org.terasology.projsndwv.components.BeeComponent;
-import org.terasology.projsndwv.components.ExtractorComponent;
-import org.terasology.projsndwv.components.LocusSampleComponent;
-import org.terasology.projsndwv.components.ProcessingComponent;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.apiculture.TempBeeRegistry;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.apiculture.components.ExtractorComponent;
+import org.terasology.apiculture.components.LocusSampleComponent;
+import org.terasology.apiculture.components.ProcessingComponent;
+import org.terasology.apiculture.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
 import org.terasology.utilities.random.MersenneRandom;
 
@@ -52,26 +52,17 @@ public class ExtractorSystem extends BaseComponentSystem {
     @In
     private InventoryManager inventoryManager;
 
-    /**
-     * The slot index for the input slot of the extractor.
-     */
+    /** The slot index for the input slot of the extractor. */
     public static final int SLOT_INPUT = 0;
 
-    /**
-     * The slot index for the output slot of the extractor.
-     */
+    /** The slot index for the output slot of the extractor. */
     public static final int SLOT_OUTPUT = 1;
 
 
-
-    /**
-     * The delayed action id for extraction completion.
-     */
+    /** The delayed action id for extraction completion. */
     public static final String EXTRACT_EVENT = "extract";
 
-    /**
-     * The time, in milliseconds, that extraction takes.
-     */
+    /** The time, in milliseconds, that extraction takes. */
     public static final long EXTRACT_TIME = 60000L;
 
     private MersenneRandom random = new MersenneRandom();

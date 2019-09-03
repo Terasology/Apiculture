@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.systems;
+package org.terasology.apiculture.systems;
 
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -28,13 +28,13 @@ import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
 import org.terasology.logic.inventory.events.InventorySlotChangedEvent;
-import org.terasology.projsndwv.TempBeeRegistry;
-import org.terasology.projsndwv.components.ApiaryComponent;
-import org.terasology.projsndwv.components.ProcessingComponent;
-import org.terasology.projsndwv.components.BeeComponent;
-import org.terasology.projsndwv.components.MatedComponent;
-import org.terasology.projsndwv.genetics.Genome;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.apiculture.TempBeeRegistry;
+import org.terasology.apiculture.components.ApiaryComponent;
+import org.terasology.apiculture.components.ProcessingComponent;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.apiculture.components.MatedComponent;
+import org.terasology.apiculture.genetics.Genome;
+import org.terasology.apiculture.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
 import org.terasology.world.generator.WorldGenerator;
 
@@ -65,58 +65,37 @@ public class ApiarySystem extends BaseComponentSystem {
 
     private Genome genome;
 
-    /**
-     * The delayed action id for life ticks.
-     */
+    /** The delayed action id for life ticks. */
     public static final String LIFE_TICK_EVENT = "life_tick";
 
-    /**
-     * The delayed action id for the completion of mating.
-     */
+    /** The delayed action id for the completion of mating. */
     public static final String MATING_EVENT = "mating";
 
 
-
-    /**
-     * The slot index for the princess/queen bee slot in an apiary's inventory.
-     */
+    /** The slot index for the princess/queen bee slot in an apiary's inventory. */
     public static final int SLOT_FEMALE = 0;
 
-    /**
-     * The slot index for the drone bee slot in an apiary's inventory.
-     */
+    /** The slot index for the drone bee slot in an apiary's inventory. */
     public static final int SLOT_MALE = 1;
 
-    /**
-     * A list of slot indices for the otuput slots in an apiary's inventory.
-     */
+    /** A list of slot indices for the otuput slots in an apiary's inventory. */
     public static final List<Integer> SLOTS_OUT = Collections.unmodifiableList(Arrays.asList(2, 3, 4, 5, 6, 7, 8));
 
 
-
-    /**
-     * The locus in a bee's genetics indicating the species of a bee.
-     */
+    /** The locus in a bee's genetics indicating the species of a bee. */
     public static final int LOCUS_SPECIES = 0;
 
-    /**
-     * The locus in a bee's genetics indicating the speed at which a bee's life ticks down.
-     */
+    /** The locus in a bee's genetics indicating the speed at which a bee's life ticks down. */
     public static final int LOCUS_SPEED = 1;
 
-    /**
-     * The locus in a bee's genetics indicating the length of a bee's lifespan.
-     */
+    /** The locus in a bee's genetics indicating the length of a bee's lifespan. */
     public static final int LOCUS_LIFESPAN = 2;
 
-    /**
-     * The locus in a bee's genetics indicating the number of drone offspring a bee will have.
-     */
+    /** The locus in a bee's genetics indicating the number of drone offspring a bee will have. */
     public static final int LOCUS_OFFSPRING_COUNT = 3;
 
-    /**
-     * The time, in milliseconds, that mating takes in an apiary.
-     */
+
+    /** The time, in milliseconds, that mating takes in an apiary. */
     public static final long MATING_TIME = 1000L;
 
     /**

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.ui;
+package org.terasology.apiculture.ui;
 
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.projsndwv.components.ProcessingComponent;
-import org.terasology.projsndwv.systems.ExtractorSystem;
+import org.terasology.apiculture.components.ProcessingComponent;
+import org.terasology.apiculture.systems.ExtractorSystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.BaseInteractionScreen;

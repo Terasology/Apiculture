@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.apiculture.components;
 
 import org.terasology.entitySystem.Component;
 
-/***
- * Indicates to screens that processes are occuring in an apiary, extractor, or injector, and at what game time they will
- * complete.
+/**
+ * Indicates that a block entity is an extractor.
  */
-public final class ProcessingComponent implements Component {
-    public long finishTime;
-
-    public ProcessingComponent() {}
-
-    public ProcessingComponent(long finishTime) {
-        this.finishTime = finishTime;
-    }
+public class ExtractorComponent implements Component {
 }
