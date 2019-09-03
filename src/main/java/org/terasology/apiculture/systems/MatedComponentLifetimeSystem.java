@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.systems;
+package org.terasology.apiculture.systems;
 
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeRemoveComponent;
@@ -21,7 +21,7 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.projsndwv.components.MatedComponent;
+import org.terasology.apiculture.components.MatedComponent;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Try to make AUTHORITY
 public class MatedComponentLifetimeSystem extends BaseComponentSystem {

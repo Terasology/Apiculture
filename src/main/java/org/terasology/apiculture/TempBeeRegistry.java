@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv;
+package org.terasology.apiculture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,9 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.projsndwv.components.ApiaryComponent;
-import org.terasology.projsndwv.components.BeeComponent;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
-import org.terasology.projsndwv.systems.ApiarySystem;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.genetics.components.GeneticsComponent;
+import org.terasology.apiculture.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.utilities.random.MersenneRandom;

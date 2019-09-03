@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.apiculture.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.inventory.ItemDifferentiating;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.genetics.components.GeneticsComponent;
 
 /**
  * Stores the genetic and lifespan information for a queen bee.

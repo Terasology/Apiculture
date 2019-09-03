@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.ui;
+package org.terasology.apiculture.ui;
 
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;

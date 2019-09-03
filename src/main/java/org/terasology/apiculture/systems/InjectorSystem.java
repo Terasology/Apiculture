@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.systems;
+package org.terasology.apiculture.systems;
 
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -28,12 +28,12 @@ import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.events.BeforeItemPutInInventory;
 import org.terasology.logic.inventory.events.InventorySlotChangedEvent;
-import org.terasology.projsndwv.TempBeeRegistry;
-import org.terasology.projsndwv.components.BeeComponent;
-import org.terasology.projsndwv.components.InjectorComponent;
-import org.terasology.projsndwv.components.LocusSampleComponent;
-import org.terasology.projsndwv.components.ProcessingComponent;
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.apiculture.TempBeeRegistry;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.apiculture.components.InjectorComponent;
+import org.terasology.apiculture.components.LocusSampleComponent;
+import org.terasology.apiculture.components.ProcessingComponent;
+import org.terasology.genetics.components.GeneticsComponent;
 import org.terasology.registry.In;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
@@ -50,25 +50,17 @@ public class InjectorSystem extends BaseComponentSystem {
     @In
     private InventoryManager inventoryManager;
 
-    /**
-     * The slot index for the sample input slot.
-     */
+    /** The slot index for the sample input slot. */
     public static final int SLOT_INPUT = 0;
 
-    /**
-     * The slot index for the bee input slot.
-     */
+    /** The slot index for the bee input slot. */
     public static final int SLOT_BEE = 1;
 
 
-    /**
-     * The delayed action id for injection completion.
-     */
+    /** The delayed action id for injection completion. */
     public static final String INJECT_EVENT = "inject";
 
-    /**
-     * The time, in milliseconds, that injection takes.
-     */
+    /** The time, in milliseconds, that injection takes. */
     public static final long INJECT_TIME = 60000L;
 
 

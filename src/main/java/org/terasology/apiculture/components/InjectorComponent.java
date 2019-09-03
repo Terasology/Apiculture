@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.components;
+package org.terasology.apiculture.components;
 
 import org.terasology.entitySystem.Component;
 
-public class ApiaryComponent implements Component {
+/**
+ * Indicates that a block entity is an injector.
+ */
+public class InjectorComponent implements Component {
 }
