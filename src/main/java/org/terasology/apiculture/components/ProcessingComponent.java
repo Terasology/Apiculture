@@ -24,7 +24,7 @@ import org.terasology.entitySystem.Component;
 public final class ProcessingComponent implements Component {
     public long finishTime;
 
-    public ProcessingComponent() {}
+    public ProcessingComponent() { }
 
     public ProcessingComponent(long finishTime) {
         this.finishTime = finishTime;

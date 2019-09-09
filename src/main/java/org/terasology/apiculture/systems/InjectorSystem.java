@@ -38,18 +38,6 @@ import org.terasology.registry.In;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class InjectorSystem extends BaseComponentSystem {
-    @In
-    private DelayManager delayManager;
-
-    @In
-    private Time time;
-
-    @In
-    private EntityManager entityManager;
-
-    @In
-    private InventoryManager inventoryManager;
-
     /** The slot index for the sample input slot. */
     public static final int SLOT_INPUT = 0;
 
@@ -63,6 +51,17 @@ public class InjectorSystem extends BaseComponentSystem {
     /** The time, in milliseconds, that injection takes. */
     public static final long INJECT_TIME = 60000L;
 
+    @In
+    private DelayManager delayManager;
+
+    @In
+    private Time time;
+
+    @In
+    private EntityManager entityManager;
+
+    @In
+    private InventoryManager inventoryManager;
 
     /**
      * Consumes BeforeItemPutInInventory events, handling inventory access controls.
@@ -76,8 +75,7 @@ public class InjectorSystem extends BaseComponentSystem {
             if (!event.getItem().hasComponent(LocusSampleComponent.class)) {
                 event.consume();
             }
-        }
-        else {
+        } else {
             if (!event.getItem().hasComponent(BeeComponent.class)) {
                 event.consume();
             }
@@ -98,20 +96,17 @@ public class InjectorSystem extends BaseComponentSystem {
                 if (delayManager.hasDelayedAction(entity, INJECT_EVENT)) {
                     delayManager.cancelDelayedAction(entity, INJECT_EVENT);
                 }
-            }
-            else if (entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_BEE).hasComponent(BeeComponent.class)){
+            } else if (entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_BEE).hasComponent(BeeComponent.class)) {
                 entity.addComponent(new ProcessingComponent(time.getGameTimeInMs() + INJECT_TIME));
                 delayManager.addDelayedAction(entity, INJECT_EVENT, INJECT_TIME);
             }
-        }
-        else {
+        } else {
             if (!event.getNewItem().hasComponent(BeeComponent.class)) {
                 entity.removeComponent(ProcessingComponent.class);
                 if (delayManager.hasDelayedAction(entity, INJECT_EVENT)) {
                     delayManager.cancelDelayedAction(entity, INJECT_EVENT);
                 }
-            }
-            else if (entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_INPUT).hasComponent(LocusSampleComponent.class)) {
+            } else if (entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_INPUT).hasComponent(LocusSampleComponent.class)) {
                 entity.addComponent(new ProcessingComponent(time.getGameTimeInMs() + INJECT_TIME));
                 delayManager.addDelayedAction(entity, INJECT_EVENT, INJECT_TIME);
             }

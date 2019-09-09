@@ -28,7 +28,8 @@ public class LifespanBar extends CoreWidget {
     @Override
     public void onDraw(Canvas canvas) {
         Rect2i canvasRegion = canvas.getRegion();
-        canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(canvasRegion.minX(), canvasRegion.maxY() - (int)(value * canvasRegion.height()), canvasRegion.width(), (int)(canvasRegion.height() * value)), color);
+        canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(canvasRegion.minX(), canvasRegion.maxY() - (int) (value * canvasRegion.height()), canvasRegion.width(),
+                (int) (canvasRegion.height() * value)), color);
     }
 
     @Override
@@ -48,16 +49,15 @@ public class LifespanBar extends CoreWidget {
     /**
      * Sets the amount the lifespan bar is filled, as a decimal.
      *
-     * Fill value is clamped between 0 and 1.
+     * Fill fill is clamped between 0 and 1.
      *
-     * @param value The percentge of the lifespan bar fill, expressed as a decimal.
+     * @param fill The percentge of the lifespan bar fill, expressed as a decimal.
      */
-    public void setFill(float value) {
-        if (value > 1f) {
-            this.value = 1f;
-        }
-        else {
-            this.value = Math.max(value, 0f);
+    public void setFill(float fill) {
+        if (fill > 1f) {
+            value = 1f;
+        } else {
+            value = Math.max(fill, 0f);
         }
     }
 }

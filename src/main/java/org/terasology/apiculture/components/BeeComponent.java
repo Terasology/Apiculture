@@ -18,6 +18,8 @@ package org.terasology.apiculture.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.logic.inventory.ItemDifferentiating;
 
+import java.util.Objects;
+
 /**
  * Indicates that an item is a bee.
  */
@@ -37,6 +39,10 @@ public final class BeeComponent implements Component, ItemDifferentiating {
         if (!(o instanceof BeeComponent)) {
             return false;
         }
-        return ((BeeComponent)o).type == type;
+        return ((BeeComponent) o).type == type;
+    }
+
+    public int hashCode() {
+        return Objects.hash(type);
     }
 }

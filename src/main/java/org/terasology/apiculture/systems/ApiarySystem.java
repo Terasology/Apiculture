@@ -48,23 +48,6 @@ import java.util.List;
  */
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ApiarySystem extends BaseComponentSystem {
-    @In
-    private DelayManager delayManager;
-
-    @In
-    private InventoryManager inventoryManager;
-
-    @In
-    private EntityManager entityManager;
-
-    @In
-    private WorldGenerator worldGenerator;
-
-    @In
-    private Time time;
-
-    private Genome genome;
-
     /** The delayed action id for life ticks. */
     public static final String LIFE_TICK_EVENT = "life_tick";
 
@@ -98,6 +81,23 @@ public class ApiarySystem extends BaseComponentSystem {
     /** The time, in milliseconds, that mating takes in an apiary. */
     public static final long MATING_TIME = 1000L;
 
+    @In
+    private DelayManager delayManager;
+
+    @In
+    private InventoryManager inventoryManager;
+
+    @In
+    private EntityManager entityManager;
+
+    @In
+    private WorldGenerator worldGenerator;
+
+    @In
+    private Time time;
+
+    private Genome genome;
+
     /**
      * Consumes BeforeItemPutInInventory events, handling inventory access controls.
      *
@@ -110,13 +110,11 @@ public class ApiarySystem extends BaseComponentSystem {
             if (!event.getItem().hasComponent(BeeComponent.class) || event.getItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.DRONE) {
                 event.consume();
             }
-        }
-        else if (event.getSlot() == SLOT_MALE) {
+        } else if (event.getSlot() == SLOT_MALE) {
             if (!event.getItem().hasComponent(BeeComponent.class) || event.getItem().getComponent(BeeComponent.class).type != BeeComponent.BeeType.DRONE) {
                 event.consume();
             }
-        }
-        else if (event.getInstigator() != entity) {
+        } else if (event.getInstigator() != entity) {
             event.consume();
         }
     }
@@ -139,26 +137,23 @@ public class ApiarySystem extends BaseComponentSystem {
                 if (delayManager.hasDelayedAction(entity, LIFE_TICK_EVENT)) {
                     delayManager.cancelDelayedAction(entity, LIFE_TICK_EVENT);
                 }
-            }
-            else if (event.getNewItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.PRINCESS){
+            } else if (event.getNewItem().getComponent(BeeComponent.class).type == BeeComponent.BeeType.PRINCESS) {
                 BeeComponent maleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_MALE).getComponent(BeeComponent.class);
                 if (maleBee != null) {
                     entity.addOrSaveComponent(new ProcessingComponent(time.getGameTimeInMs() + MATING_TIME));
                     delayManager.addDelayedAction(entity, MATING_EVENT, MATING_TIME);
                 }
+            } else {
+                delayManager.addDelayedAction(entity, LIFE_TICK_EVENT,
+                        TempBeeRegistry.getTickTimeFromGenome(event.getNewItem().getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
             }
-            else {
-                delayManager.addDelayedAction(entity, LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(event.getNewItem().getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
-            }
-        }
-        else if (event.getSlot() == SLOT_MALE){
+        } else if (event.getSlot() == SLOT_MALE) {
             if (!event.getNewItem().hasComponent(BeeComponent.class)) {
                 entity.removeComponent(ProcessingComponent.class);
                 if (delayManager.hasDelayedAction(entity, MATING_EVENT)) {
                     delayManager.cancelDelayedAction(entity, MATING_EVENT);
                 }
-            }
-            else {
+            } else {
                 BeeComponent femaleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE).getComponent(BeeComponent.class);
                 if (femaleBee != null) {
                     if (femaleBee.type == BeeComponent.BeeType.PRINCESS) {
@@ -177,8 +172,7 @@ public class ApiarySystem extends BaseComponentSystem {
     public void onApiaryEvent(DelayedActionTriggeredEvent event, EntityRef entity, ApiaryComponent component) {
         if (event.getActionId().equals(LIFE_TICK_EVENT)) {
             onLifeTick(entity);
-        }
-        else if (event.getActionId().equals(MATING_EVENT)) {
+        } else if (event.getActionId().equals(MATING_EVENT)) {
             onMatingFinished(entity);
         }
     }
@@ -203,7 +197,8 @@ public class ApiarySystem extends BaseComponentSystem {
             birth(entity);
         } else {
             queenBee.saveComponent(matedComponent);
-            delayManager.addDelayedAction(entity, LIFE_TICK_EVENT, TempBeeRegistry.getTickTimeFromGenome(queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
+            delayManager.addDelayedAction(entity, LIFE_TICK_EVENT,
+                    TempBeeRegistry.getTickTimeFromGenome(queenBee.getComponent(GeneticsComponent.class).activeGenes.get(LOCUS_SPEED)));
         }
     }
 
@@ -216,7 +211,8 @@ public class ApiarySystem extends BaseComponentSystem {
      */
     private void birth(EntityRef entity) {
         EntityRef queenBee = entity.getComponent(InventoryComponent.class).itemSlots.get(SLOT_FEMALE);
-        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queenBee.getComponent(GeneticsComponent.class), queenBee.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
+        Iterator<GeneticsComponent> offspringGenetics = getGenome().combine(queenBee.getComponent(GeneticsComponent.class),
+                queenBee.getComponent(MatedComponent.class).container.getComponent(GeneticsComponent.class));
 
         EntityRef offspring = entityManager.create("Apiculture:bee_princess");
         GeneticsComponent geneticsComponent = offspringGenetics.next();
@@ -254,7 +250,9 @@ public class ApiarySystem extends BaseComponentSystem {
         EntityRef femaleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
         GeneticsComponent femaleGenetics = femaleBee.getComponent(GeneticsComponent.class);
         EntityRef maleBee = entity.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_MALE);
-        femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class), TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_LIFESPAN)), entityManager));
+        femaleBee.addComponent(new MatedComponent(maleBee.getComponent(GeneticsComponent.class),
+                TempBeeRegistry.getLifespanFromGenome(femaleGenetics.activeGenes.get(ApiarySystem.LOCUS_LIFESPAN)),
+                entityManager));
         BeeComponent beeComponent = femaleBee.getComponent(BeeComponent.class);
         beeComponent.type = BeeComponent.BeeType.QUEEN;
         femaleBee.saveComponent(beeComponent);

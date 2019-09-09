@@ -31,7 +31,7 @@ public class VerticalFiller extends CoreWidget {
     private int size = 1;
 
     @Override
-    public void onDraw(Canvas canvas) {}
+    public void onDraw(Canvas canvas) { }
 
     @Override
     public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {

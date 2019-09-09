@@ -64,6 +64,25 @@ public class ExtractorScreen extends BaseInteractionScreen {
         progressBar = find("progressBar", LifespanBar.class);
     }
 
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        EntityRef interactionTarget = getInteractionTarget();
+        ProcessingComponent processingComponent = interactionTarget.getComponent(ProcessingComponent.class);
+        if (processingComponent != null) {
+            progressBar.setFill(Math.min(ExtractorSystem.EXTRACT_TIME + time.getGameTimeInMs() - processingComponent.finishTime, ExtractorSystem.EXTRACT_TIME)
+                    / (float) ExtractorSystem.EXTRACT_TIME);
+        } else {
+            progressBar.setFill(0f);
+        }
+    }
+
+    @Override
+    public boolean isModal() {
+        return false;
+    }
+
     private static class EntityRefBinding extends ReadOnlyBinding<EntityRef> {
         private EntityRef entityRef;
 
@@ -75,24 +94,5 @@ public class ExtractorScreen extends BaseInteractionScreen {
         public EntityRef get() {
             return entityRef;
         }
-    }
-
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-
-        EntityRef interactionTarget = getInteractionTarget();
-        ProcessingComponent processingComponent = interactionTarget.getComponent(ProcessingComponent.class);
-        if (processingComponent != null) {
-            progressBar.setFill(Math.min(ExtractorSystem.EXTRACT_TIME + time.getGameTimeInMs() - processingComponent.finishTime, ExtractorSystem.EXTRACT_TIME) / (float)ExtractorSystem.EXTRACT_TIME);
-        }
-        else {
-            progressBar.setFill(0f);
-        }
-    }
-
-    @Override
-    public boolean isModal() {
-        return false;
     }
 }

@@ -18,6 +18,8 @@ package org.terasology.apiculture.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.logic.inventory.ItemDifferentiating;
 
+import java.util.Objects;
+
 /**
  * Indicates an item is a genetic sample, and stores the locus and genotype of the gene it is a sample of.
  */
@@ -32,7 +34,7 @@ public class LocusSampleComponent implements Component, ItemDifferentiating {
      */
     public int genotype;
 
-    public LocusSampleComponent() {}
+    public LocusSampleComponent() { }
 
     public LocusSampleComponent(int locus, int genotype) {
         this.locus = locus;
@@ -44,7 +46,11 @@ public class LocusSampleComponent implements Component, ItemDifferentiating {
             return false;
         }
 
-        LocusSampleComponent sampleComponent = (LocusSampleComponent)o;
+        LocusSampleComponent sampleComponent = (LocusSampleComponent) o;
         return locus == sampleComponent.locus && genotype == sampleComponent.genotype;
+    }
+
+    public int hashCode() {
+        return Objects.hash(locus, genotype);
     }
 }

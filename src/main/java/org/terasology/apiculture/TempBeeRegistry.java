@@ -31,21 +31,24 @@ import org.terasology.utilities.random.MersenneRandom;
 import org.terasology.world.generator.WorldGenerator;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * A temporary class providing helpers intended to be provided by a future bee registry.
  */
-public class TempBeeRegistry {
-    private static HashMap<Integer, Integer> lifespans = new HashMap<>();
-    private static HashMap<Integer, Long> tickspeeds = new HashMap<>();
-    private static HashMap<Integer, Production> productions = new HashMap<>();
-    private static HashMap<Integer, HashMap<Integer, String>> genotypeNames = new HashMap<>();
+public final class TempBeeRegistry {
+    private static Map<Integer, Integer> lifespans = new HashMap<>();
+    private static Map<Integer, Long> tickspeeds = new HashMap<>();
+    private static Map<Integer, Production> productions = new HashMap<>();
+    private static Map<Integer, Map<Integer, String>> genotypeNames = new HashMap<>();
 
     private static MersenneRandom random;
 
     private static Logger logger = LoggerFactory.getLogger(TempBeeRegistry.class);
+
+    private TempBeeRegistry() { }
 
     public static EntityRef modifyItemForSpeciesAndType(EntityRef entity) {
         if (!entity.hasComponent(BeeComponent.class)) {
@@ -75,7 +78,8 @@ public class TempBeeRegistry {
         }
 
         // TODO: This call can probably be checked, but it'll take a serious refactor.
-        Optional<TextureRegionAsset> textureRegionAsset = assetManager.getAsset("Apiculture:bee_" + new String[]{"a", "b", "c"}[species] + "_" + typeName.toLowerCase(), TextureRegionAsset.class);
+        Optional<TextureRegionAsset> textureRegionAsset =
+                assetManager.getAsset("Apiculture:bee_" + new String[]{"a", "b", "c"}[species] + "_" + typeName.toLowerCase(), TextureRegionAsset.class);
         if (!textureRegionAsset.isPresent()) {
             logger.error("Texture not found for species " + species + " and type '" + typeName + "'");
             return null;
@@ -108,18 +112,17 @@ public class TempBeeRegistry {
     }
 
     public static EntityRef getProduceForSpeciesWithChance(int species) {
-        MersenneRandom random = getRandom();
+        MersenneRandom rand = getRandom();
         Production production = productions.get(species);
 
-        if (Objects.requireNonNull(random).nextFloat() < production.chance) {
+        if (Objects.requireNonNull(rand).nextFloat() < production.chance) {
             EntityManager entityManager = CoreRegistry.get(EntityManager.class);
             if (entityManager == null) {
                 logger.error("No EntityManager in registry");
                 return null;
             }
             return entityManager.create(production.prefab);
-        }
-        else {
+        } else {
             return EntityRef.NULL;
         }
     }
@@ -155,7 +158,7 @@ public class TempBeeRegistry {
         lifespans.put(1, 6);
         lifespans.put(2, 9);
 
-        HashMap<Integer, String> map = new HashMap<>();
+        Map<Integer, String> map = new HashMap<>();
         map.put(0, "Short Life");
         map.put(1, "Normal Life");
         map.put(2, "Long Life");

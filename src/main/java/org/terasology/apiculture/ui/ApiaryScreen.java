@@ -88,6 +88,33 @@ public class ApiaryScreen extends BaseInteractionScreen {
         lifespanBar = find("lifespanBar", LifespanBar.class);
     }
 
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        EntityRef interactionTarget = getInteractionTarget();
+        ProcessingComponent matingComponent = interactionTarget.getComponent(ProcessingComponent.class);
+        if (matingComponent != null) {
+            lifespanBar.setColor(Color.RED);
+            lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.finishTime, ApiarySystem.MATING_TIME)
+                    / (float) ApiarySystem.MATING_TIME);
+        } else {
+            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
+            if (femaleBee.hasComponent(MatedComponent.class)) {
+                lifespanBar.setColor(Color.YELLOW);
+                MatedComponent matedComponent = femaleBee.getComponent(MatedComponent.class);
+                lifespanBar.setFill((float) matedComponent.ticksRemaining / matedComponent.lifespan);
+            } else {
+                lifespanBar.setFill(0f);
+            }
+        }
+    }
+
+    @Override
+    public boolean isModal() {
+        return false;
+    }
+
     private static class EntityRefBinding extends ReadOnlyBinding<EntityRef> {
         private EntityRef entityRef;
 
@@ -99,33 +126,5 @@ public class ApiaryScreen extends BaseInteractionScreen {
         public EntityRef get() {
             return entityRef;
         }
-    }
-
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-
-        EntityRef interactionTarget = getInteractionTarget();
-        ProcessingComponent matingComponent = interactionTarget.getComponent(ProcessingComponent.class);
-        if (matingComponent != null) {
-            lifespanBar.setColor(Color.RED);
-            lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.finishTime, ApiarySystem.MATING_TIME) / (float)ApiarySystem.MATING_TIME);
-        }
-        else {
-            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
-            if (femaleBee.hasComponent(MatedComponent.class)) {
-                lifespanBar.setColor(Color.YELLOW);
-                MatedComponent matedComponent = femaleBee.getComponent(MatedComponent.class);
-                lifespanBar.setFill((float)matedComponent.ticksRemaining / matedComponent.lifespan);
-            }
-            else {
-                lifespanBar.setFill(0f);
-            }
-        }
-    }
-
-    @Override
-    public boolean isModal() {
-        return false;
     }
 }

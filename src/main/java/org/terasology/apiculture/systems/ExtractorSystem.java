@@ -40,18 +40,6 @@ import org.terasology.utilities.random.MersenneRandom;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ExtractorSystem extends BaseComponentSystem {
-    @In
-    private DelayManager delayManager;
-
-    @In
-    private Time time;
-
-    @In
-    private EntityManager entityManager;
-
-    @In
-    private InventoryManager inventoryManager;
-
     /** The slot index for the input slot of the extractor. */
     public static final int SLOT_INPUT = 0;
 
@@ -64,6 +52,18 @@ public class ExtractorSystem extends BaseComponentSystem {
 
     /** The time, in milliseconds, that extraction takes. */
     public static final long EXTRACT_TIME = 60000L;
+
+    @In
+    private DelayManager delayManager;
+
+    @In
+    private Time time;
+
+    @In
+    private EntityManager entityManager;
+
+    @In
+    private InventoryManager inventoryManager;
 
     private MersenneRandom random = new MersenneRandom();
 
@@ -78,8 +78,7 @@ public class ExtractorSystem extends BaseComponentSystem {
             if (!event.getItem().hasComponent(BeeComponent.class)) {
                 event.consume();
             }
-        }
-        else if (event.getInstigator() != entity) {
+        } else if (event.getInstigator() != entity) {
             event.consume();
         }
     }
@@ -97,8 +96,7 @@ public class ExtractorSystem extends BaseComponentSystem {
                 if (delayManager.hasDelayedAction(entity, EXTRACT_EVENT)) {
                     delayManager.cancelDelayedAction(entity, EXTRACT_EVENT);
                 }
-            }
-            else {
+            } else {
                 entity.addComponent(new ProcessingComponent(time.getGameTimeInMs() + EXTRACT_TIME));
                 delayManager.addDelayedAction(entity, EXTRACT_EVENT, EXTRACT_TIME);
             }
