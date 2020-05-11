@@ -1,12 +1,14 @@
 {
-    "id" : "Apiculture",
-    "version" : "0.1.0-SNAPSHOT",
-    "author" : "Soundwave",
-    "displayName" : "Apiculture",
-    "description" : "",
-    "dependencies" : [
-        {"id" : "SoundyGenetics", "minVersion" : "0.1.0"},
-        {"id" : "Inventory", "minVersion" : "1.0.0"}
+    "id": "Apiculture",
+    "version": "1.0.0",
+    "author": "Soundwave",
+    "displayName": "Apiculture",
+    "description": "This module adds logic and assets for bees and beekeeping",
+    "dependencies": [
+        { "id": "Inventory", "minVersion": "1.1.0" },
+        { "id": "SoundyGenetics", "minVersion": "0.1.0" }
     ],
-    "serverSideOnly" : false
+    "serverSideOnly": false,
+    "isAsset": true,
+    "isLibrary": true
 }
