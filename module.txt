@@ -6,7 +6,7 @@
     "description": "This module adds logic and assets for bees and beekeeping",
     "dependencies": [
         { "id": "Inventory", "minVersion": "1.1.0" },
-        { "id": "SoundyGenetics", "minVersion": "0.1.0" }
+        { "id": "SoundyGenetics", "minVersion": "1.0.0" }
     ],
     "serverSideOnly": false,
     "isAsset": true,
