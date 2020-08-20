@@ -1,25 +1,13 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.apiculture.ui;
 
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.rendering.nui.Canvas;
-import org.terasology.rendering.nui.Color;
-import org.terasology.rendering.nui.CoreWidget;
+import org.joml.Rectanglei;
+import org.joml.Vector2i;
+import org.terasology.math.JomlUtil;
+import org.terasology.nui.Canvas;
+import org.terasology.nui.Color;
+import org.terasology.nui.CoreWidget;
 
 public class LifespanBar extends CoreWidget {
     private Color color = Color.RED;
@@ -27,9 +15,9 @@ public class LifespanBar extends CoreWidget {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Rect2i canvasRegion = canvas.getRegion();
-        canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(canvasRegion.minX(), canvasRegion.maxY() - (int) (value * canvasRegion.height()), canvasRegion.width(),
-                (int) (canvasRegion.height() * value)), color);
+        Rectanglei canvasRegion = canvas.getRegion();
+        canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(canvasRegion.minX, canvasRegion.maxY - (int) (value * canvasRegion.lengthY()), canvasRegion.lengthX(),
+                (int) (canvasRegion.lengthY() * value)), color);
     }
 
     @Override
