@@ -17,14 +17,14 @@ package org.terasology.apiculture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.assets.management.AssetManager;
+import org.terasology.apiculture.components.BeeComponent;
+import org.terasology.apiculture.systems.ApiarySystem;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.genetics.components.GeneticsComponent;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.logic.common.DisplayNameComponent;
 import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.apiculture.components.BeeComponent;
-import org.terasology.genetics.components.GeneticsComponent;
-import org.terasology.apiculture.systems.ApiarySystem;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.utilities.random.MersenneRandom;
