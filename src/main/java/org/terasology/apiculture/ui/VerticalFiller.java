@@ -15,10 +15,11 @@ public class VerticalFiller extends CoreWidget {
      * The vertical height of this filler.
      */
     @LayoutConfig
-    private int size = 1;
+    private final int size = 1;
 
     @Override
-    public void onDraw(Canvas canvas) { }
+    public void onDraw(Canvas canvas) {
+    }
 
     @Override
     public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {

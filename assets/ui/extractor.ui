@@ -12,7 +12,7 @@
             "widget": "content",
             "offset": -10
           },
-          "position-bottom" : {
+          "position-bottom": {
             "target": "BOTTOM",
             "widget": "content",
             "offset": -10
@@ -110,5 +110,5 @@
       }
     ]
   }
-  }
+}
 }

@@ -2,19 +2,19 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.apiculture.ui;
 
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.components.MatedComponent;
+import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.systems.ApiarySystem;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.BaseInteractionScreen;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.BaseInteractionScreen;
+import org.terasology.inventory.logic.InventoryComponent;
+import org.terasology.inventory.rendering.nui.layers.ingame.InventoryGrid;
 import org.terasology.nui.Color;
 import org.terasology.nui.databinding.ReadOnlyBinding;
-import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
 
 import java.util.Objects;
 
@@ -86,7 +86,8 @@ public class ApiaryScreen extends BaseInteractionScreen {
             lifespanBar.setFill(Math.min(ApiarySystem.MATING_TIME + time.getGameTimeInMs() - matingComponent.finishTime, ApiarySystem.MATING_TIME)
                     / (float) ApiarySystem.MATING_TIME);
         } else {
-            EntityRef femaleBee = interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
+            EntityRef femaleBee =
+                    interactionTarget.getComponent(InventoryComponent.class).itemSlots.get(ApiarySystem.SLOT_FEMALE);
             if (femaleBee.hasComponent(MatedComponent.class)) {
                 lifespanBar.setColor(Color.YELLOW);
                 MatedComponent matedComponent = femaleBee.getComponent(MatedComponent.class);
@@ -103,7 +104,7 @@ public class ApiaryScreen extends BaseInteractionScreen {
     }
 
     private static class EntityRefBinding extends ReadOnlyBinding<EntityRef> {
-        private EntityRef entityRef;
+        private final EntityRef entityRef;
 
         public EntityRefBinding(EntityRef entityRef) {
             this.entityRef = entityRef;

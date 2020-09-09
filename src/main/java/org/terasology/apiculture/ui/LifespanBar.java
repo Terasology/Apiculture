@@ -4,7 +4,7 @@ package org.terasology.apiculture.ui;
 
 import org.joml.Rectanglei;
 import org.joml.Vector2i;
-import org.terasology.math.JomlUtil;
+import org.terasology.engine.math.JomlUtil;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.Color;
 import org.terasology.nui.CoreWidget;
@@ -16,7 +16,8 @@ public class LifespanBar extends CoreWidget {
     @Override
     public void onDraw(Canvas canvas) {
         Rectanglei canvasRegion = canvas.getRegion();
-        canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(canvasRegion.minX, canvasRegion.maxY - (int) (value * canvasRegion.lengthY()), canvasRegion.lengthX(),
+        canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(canvasRegion.minX,
+                canvasRegion.maxY - (int) (value * canvasRegion.lengthY()), canvasRegion.lengthX(),
                 (int) (canvasRegion.lengthY() * value)), color);
     }
 
@@ -36,7 +37,7 @@ public class LifespanBar extends CoreWidget {
 
     /**
      * Sets the amount the lifespan bar is filled, as a decimal.
-     *
+     * <p>
      * Fill fill is clamped between 0 and 1.
      *
      * @param fill The percentge of the lifespan bar fill, expressed as a decimal.

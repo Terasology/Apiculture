@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.apiculture.ui;
 
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.players.LocalPlayer;
 import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.systems.ExtractorSystem;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.BaseInteractionScreen;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.BaseInteractionScreen;
+import org.terasology.inventory.rendering.nui.layers.ingame.InventoryGrid;
 import org.terasology.nui.databinding.ReadOnlyBinding;
-import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
 
 import java.util.Objects;
 
@@ -71,7 +71,7 @@ public class ExtractorScreen extends BaseInteractionScreen {
     }
 
     private static class EntityRefBinding extends ReadOnlyBinding<EntityRef> {
-        private EntityRef entityRef;
+        private final EntityRef entityRef;
 
         public EntityRefBinding(EntityRef entityRef) {
             this.entityRef = entityRef;
