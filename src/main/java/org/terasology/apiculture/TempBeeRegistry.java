@@ -14,8 +14,8 @@ import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.engine.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.engine.utilities.random.MersenneRandom;
 import org.terasology.engine.world.generator.WorldGenerator;
-import org.terasology.genetics.components.GeneticsComponent;
 import org.terasology.gestalt.assets.management.AssetManager;
+import org.terasology.soundygenetics.components.GeneticsComponent;
 
 import java.util.HashMap;
 import java.util.Map;

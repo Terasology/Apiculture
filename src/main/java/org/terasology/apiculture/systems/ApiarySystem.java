@@ -18,12 +18,12 @@ import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.generator.WorldGenerator;
-import org.terasology.genetics.Genome;
-import org.terasology.genetics.components.GeneticsComponent;
 import org.terasology.inventory.logic.InventoryComponent;
 import org.terasology.inventory.logic.InventoryManager;
 import org.terasology.inventory.logic.events.BeforeItemPutInInventory;
 import org.terasology.inventory.logic.events.InventorySlotChangedEvent;
+import org.terasology.soundygenetics.Genome;
+import org.terasology.soundygenetics.components.GeneticsComponent;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -19,11 +19,11 @@ import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.utilities.random.MersenneRandom;
-import org.terasology.genetics.components.GeneticsComponent;
 import org.terasology.inventory.logic.InventoryComponent;
 import org.terasology.inventory.logic.InventoryManager;
 import org.terasology.inventory.logic.events.BeforeItemPutInInventory;
 import org.terasology.inventory.logic.events.InventorySlotChangedEvent;
+import org.terasology.soundygenetics.components.GeneticsComponent;
 
 @RegisterSystem(RegisterMode.ALWAYS) // TODO: Authority
 public class ExtractorSystem extends BaseComponentSystem {

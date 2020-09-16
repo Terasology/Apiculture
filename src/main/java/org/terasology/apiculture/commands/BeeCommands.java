@@ -14,7 +14,7 @@ import org.terasology.engine.logic.console.commandSystem.annotations.Sender;
 import org.terasology.engine.logic.permission.PermissionManager;
 import org.terasology.engine.network.ClientComponent;
 import org.terasology.engine.registry.In;
-import org.terasology.genetics.components.GeneticsComponent;
+import org.terasology.soundygenetics.components.GeneticsComponent;
 
 @RegisterSystem
 public class BeeCommands extends BaseComponentSystem {
