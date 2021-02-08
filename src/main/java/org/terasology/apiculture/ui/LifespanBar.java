@@ -4,20 +4,19 @@ package org.terasology.apiculture.ui;
 
 import org.terasology.joml.geom.Rectanglei;
 import org.joml.Vector2i;
-import org.terasology.math.JomlUtil;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.Color;
 import org.terasology.nui.CoreWidget;
 
 public class LifespanBar extends CoreWidget {
-    private Color color = Color.RED;
+    private Color color = new Color(Color.red);
     private float value = 1f;
 
     @Override
     public void onDraw(Canvas canvas) {
         Rectanglei canvasRegion = canvas.getRegion();
-        canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(canvasRegion.minX, canvasRegion.maxY - (int) (value * canvasRegion.lengthY()), canvasRegion.lengthX(),
-                (int) (canvasRegion.lengthY() * value)), color);
+        canvas.drawFilledRectangle(new Rectanglei(canvasRegion.minX, canvasRegion.maxY - (int) (value * canvasRegion.getSizeY())).setSize(canvasRegion.getSizeX(),
+                (int) (canvasRegion.getSizeY() * value)), color);
     }
 
     @Override
