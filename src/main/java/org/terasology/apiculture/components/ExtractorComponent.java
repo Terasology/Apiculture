@@ -15,7 +15,7 @@
  */
 package org.terasology.apiculture.components;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * Indicates that a block entity is an extractor.

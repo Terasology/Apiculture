@@ -2,19 +2,19 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.apiculture.ui;
 
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.components.MatedComponent;
+import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.systems.ApiarySystem;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.BaseInteractionScreen;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.inventory.InventoryComponent;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.BaseInteractionScreen;
+import org.terasology.engine.rendering.nui.layers.ingame.inventory.InventoryGrid;
 import org.terasology.nui.Color;
 import org.terasology.nui.databinding.ReadOnlyBinding;
-import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
 
 import java.util.Objects;
 

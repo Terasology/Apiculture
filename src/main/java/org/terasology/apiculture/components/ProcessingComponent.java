@@ -15,7 +15,7 @@
  */
 package org.terasology.apiculture.components;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * Indicates to screens that processes are occurring in an apiary, extractor, or injector, and at what game time they will
