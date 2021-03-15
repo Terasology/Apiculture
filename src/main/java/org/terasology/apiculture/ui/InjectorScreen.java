@@ -10,7 +10,7 @@ import org.terasology.engine.logic.players.LocalPlayer;
 import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.rendering.nui.BaseInteractionScreen;
-import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
+import org.terasology.module.inventory.ui.InventoryGrid;
 import org.terasology.nui.databinding.ReadOnlyBinding;
 
 import java.util.Objects;

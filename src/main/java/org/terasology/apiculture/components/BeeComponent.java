@@ -16,7 +16,7 @@
 package org.terasology.apiculture.components;
 
 import org.terasology.engine.entitySystem.Component;
-import org.terasology.logic.inventory.ItemDifferentiating;
+import org.terasology.module.inventory.components.ItemDifferentiating;
 
 import java.util.Objects;
 

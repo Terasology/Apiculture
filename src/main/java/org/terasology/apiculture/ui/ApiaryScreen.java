@@ -7,12 +7,12 @@ import org.terasology.apiculture.components.ProcessingComponent;
 import org.terasology.apiculture.systems.ApiarySystem;
 import org.terasology.engine.core.Time;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.logic.inventory.InventoryComponent;
+import org.terasology.module.inventory.components.InventoryComponent;
 import org.terasology.engine.logic.players.LocalPlayer;
 import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.rendering.nui.BaseInteractionScreen;
-import org.terasology.rendering.nui.layers.ingame.inventory.InventoryGrid;
+import org.terasology.module.inventory.ui.InventoryGrid;
 import org.terasology.nui.Color;
 import org.terasology.nui.databinding.ReadOnlyBinding;
 
