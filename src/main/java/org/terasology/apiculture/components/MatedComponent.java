@@ -51,7 +51,7 @@ public final class MatedComponent implements Component<MatedComponent>, ItemDiff
     }
 
     @Override
-    public void copy(MatedComponent other) {
+    public void copyFrom(MatedComponent other) {
         this.container = other.container;
         this.ticksRemaining = other.ticksRemaining;
         this.lifespan = other.lifespan;

@@ -17,7 +17,7 @@ public final class BeeComponent implements Component<BeeComponent>, ItemDifferen
     public BeeType type;
 
     @Override
-    public void copy(BeeComponent other) {
+    public void copyFrom(BeeComponent other) {
         this.type = other.type;
     }
 

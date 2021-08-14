@@ -42,7 +42,7 @@ public class LocusSampleComponent implements Component<LocusSampleComponent>, It
     }
 
     @Override
-    public void copy(LocusSampleComponent other) {
+    public void copyFrom(LocusSampleComponent other) {
         this.locus = other.locus;
         this.genotype = other.genotype;
     }

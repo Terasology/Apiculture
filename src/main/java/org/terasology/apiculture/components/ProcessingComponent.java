@@ -18,7 +18,7 @@ public final class ProcessingComponent implements Component<ProcessingComponent>
     }
 
     @Override
-    public void copy(ProcessingComponent other) {
+    public void copyFrom(ProcessingComponent other) {
         this.finishTime = other.finishTime;
     }
 }
