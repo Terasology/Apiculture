@@ -29,14 +29,14 @@ import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.module.inventory.components.InventoryComponent;
-import org.terasology.module.inventory.systems.InventoryManager;
-import org.terasology.module.inventory.events.BeforeItemPutInInventory;
-import org.terasology.module.inventory.events.InventorySlotChangedEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.generator.WorldGenerator;
 import org.terasology.genetics.Genome;
 import org.terasology.genetics.components.GeneticsComponent;
+import org.terasology.module.inventory.components.InventoryComponent;
+import org.terasology.module.inventory.events.BeforeItemPutInInventory;
+import org.terasology.module.inventory.events.InventorySlotChangedEvent;
+import org.terasology.module.inventory.systems.InventoryManager;
 
 import java.util.Arrays;
 import java.util.Collections;
